@@ -1,0 +1,51 @@
+{% set countFutureSessions = futureSessions|length %}
+{% if countFutureSessions > 0 %}
+<section class="display-formation-net-pitch-section">
+  <div class="background-display-formation-net-pitch">
+    
+    <img id="session-image-1" class="session-img active" src="" alt="">
+    <img id="session-image-2" class="session-img" src="" alt="">
+
+    <div class="overlay-display-formation-net-pitch"></div>
+
+    <div class="content-display-formation-net-pitch">
+      <div class="content-display-formation-net-pitch-left">
+        <h2 id="session-title" class="fade-text"></h2>
+        <p id="session-location" class="fade-text"></p>
+        <p id="session-dates-display" class="fade-text"></p>
+      </div>
+      <div class="content-display-formation-net-pitch-right">
+        <a id="session-link" href="#">
+          <button>DÉCOUVRIR</button>
+        </a>
+      </div>
+    </div>
+
+{% if countFutureSessions > 1 %}
+  <i class="bi bi-chevron-compact-left chevron-left"></i>
+  <i class="bi bi-chevron-compact-right chevron-right"></i>
+{% endif %}
+  </div>
+
+<script id="sessions-data" type="application/json">
+  {{ futureSessions
+    | map(session => {
+        'imgSessionNetPitchFormation': session.imgSessionNetPitchFormation,
+        'remoteSession': session.remoteSession,
+        'startDateSessionNetPitchFormation': session.startDateSessionNetPitchFormation|date('Y-m-d'),
+        'endDateSessionNetPitchFormation': session.endDateSessionNetPitchFormation|date('Y-m-d'),
+        'netPitchFormation': {
+          'titleNetPitchFormation': session.netPitchFormation.titleNetPitchFormation,
+          'slugNetPitchformation': session.netPitchFormation.slugNetPitchformation
+        },
+        'location': session.location ? {
+          'cityLocation': session.location.cityLocation
+        } : null
+    })
+    | json_encode(constant('JSON_UNESCAPED_UNICODE')) | raw
+  }}
+</script>
+
+</section>
+{% endif %}
+

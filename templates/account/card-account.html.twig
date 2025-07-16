@@ -1,0 +1,317 @@
+<section>
+  <div class="account-container">
+    <div class="picture-and-information">
+      <h2 class="title-account">
+        MON COMPTE
+      </h2>
+      <div class="account-details">
+        <div class="tab-personal-information">
+          <button class="tablinks-personal-information"
+            onclick="openTab(event, 'updatePicture')">
+            MODIFIER LA PHOTO
+          </button>
+          <button id="defaultOpen"
+            class="tablinks-personal-information active"
+            onclick="openTab(event, 'personalDetails')">
+            INFORMATION PERSONNELLE
+          </button>
+          <button class="tablinks-personal-information"
+            onclick="openTab(event, 'cvDetails')">
+            CV & AUTRES
+          </button>
+          <button class="tablinks-personal-information"
+            onclick="openTab(event, 'changePassword')">
+            CHANGER LE MOT DE PASSE
+          </button>
+          {% if
+            not (
+              is_granted('ROLE_SUPER_ADMIN')
+                or is_granted('ROLE_ADMIN')
+                or is_granted('ROLE_SUB_ADMIN')
+                or is_granted('ROLE_SUB_ADMIN_FORMATION')
+                or is_granted('ROLE_SUB_ADMIN_ANNOUNCEMENT')
+                or is_granted('ROLE_SUB_ADMIN_EVENT')
+                or is_granted('ROLE_SUB_ADMIN_BLOG')
+                or is_granted('ROLE_SUB_ADMIN_COMMENTARY')
+                or is_granted('ROLE_SUB_ADMIN_GESTION')
+            ) %}
+            <button class="tablinks-personal-information"
+              onclick="openTab(event, 'deleteAccount')">
+              SUPPRIMER LE COMPTE
+            </button>
+          {% endif %}
+        </div>
+
+        <div class="flash-container-account">
+          {% for message in all_flashes['danger_picture_account'] ?? [] %}
+            <div class="flash-message-update-account flash-error">
+              {{ message }}
+            </div>
+          {% endfor %}
+          {% for message in all_flashes['success_picture_account'] ?? [] %}
+            <div class="flash-message-update-account flash-success-update-account">
+              {{ message }}
+            </div>
+          {% endfor %}
+
+          {% for message in all_flashes['danger_change_password'] ?? [] %}
+            <div class="flash-message-update-account flash-error-update-account">
+              {{ message }}
+            </div>
+          {% endfor %}
+          {% for message in all_flashes['success_change_password'] ?? [] %}
+            <div class="flash-message-update-account flash-success-update-account">
+              {{ message }}
+            </div>
+          {% endfor %}
+
+          {% for message in all_flashes['danger_delete_account'] ?? [] %}
+            <div class="flash-message-update-account flash-error-update-account">
+              {{ message }}
+            </div>
+          {% endfor %}
+          {% for message in all_flashes['success_delete_account'] ?? [] %}
+            <div class="flash-message-update-account flash-success-update-account">
+              {{ message }}
+            </div>
+          {% endfor %}
+
+          {% for message in all_flashes['danger_update_info_account'] ?? [] %}
+            <div class="flash-message-update-account flash-error-update-account">
+              {{ message }}
+            </div>
+          {% endfor %}
+          {% for message in all_flashes['success_update_info_account'] ?? [] %}
+            <div class="flash-message-update-account flash-success-update-account">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+
+        <div id="personalDetails" class="tabcontent-personal-information">
+          <p>
+            <strong>Statut du compte :</strong>
+            {% if user.isVerified %}
+              <span style="color: green;">Vérifié</span>
+            {% else %}
+              <span style="color: red;">Non vérifié</span>
+            {% endif %}
+          </p>
+
+          <form method="post" action="{{ path('app_account_update_info') }}">
+            <input type="hidden"
+              name="_token"
+              value="{{ csrf_token('update_info') }}" />
+
+            <label for="last-name-account">Nom de famille :</label>
+            <input type="text"
+              id="last-name-account"
+              name="lastnameUser"
+              value="{{ user.lastnameUser }}"
+              required />
+
+            <label for="first-name-account">Prénom :</label>
+            <input type="text"
+              id="first-name-account"
+              name="firstnameUser"
+              value="{{ user.firstnameUser }}"
+              required />
+
+            <label for="email-account">Adresse email :</label>
+            <input type="email"
+              id="email-account"
+              name="email"
+              value="{{ user.email }}"
+              required />
+
+            <label for="phone-account">Numéro de téléphone :</label>
+            <input type="text"
+              id="phone-account"
+              name="telephoneUser"
+              value="{{ user.telephoneUser }}"
+              placeholder="Ex: 06 00 00 00 00" />
+
+            <div class="button-container">
+              <button type="submit" class="update-button">
+                Mettre à jour les informations
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div id="cvDetails"
+          class="tabcontent-personal-information"
+          style="display: none;">
+          <form method="post"
+            action="{{ path('app_account_update_info') }}"
+            enctype="multipart/form-data">
+            <input type="hidden"
+              name="_token"
+              value="{{ csrf_token('update_info') }}" />
+
+            <label for="fieldOfEvolutionUser">
+              Dans quels domaines artistiques évoluez-vous ?
+            </label>
+            <textarea id="fieldOfEvolutionUser"
+              name="fieldOfEvolutionUser"
+              rows="4"
+              required>
+              {{ user.fieldOfEvolutionUser }}
+            </textarea>
+
+          <label for="intermittentUser">
+            Êtes-vous éligible à l'AFDAS en tant qu'intermittent ou artiste-auteur ?
+          </label>
+          <select id="intermittentUser"
+                  name="intermittentUser"
+                  rows="4"
+                  class="input-form-announcement-account"
+                  required>
+            <option value="">-- Sélectionnez une option --</option>
+            <option value="Oui" {% if user.intermittentUser == 'Oui' %}selected{% endif %}>Oui</option>
+            <option value="Non" {% if user.intermittentUser == 'Non' %}selected{% endif %}>Non</option>
+          </select>
+
+            {% if user.curriculumUser %}
+              <p>
+                <strong>CV actuel :</strong>
+                <a href="{{
+                  asset(
+                    'images/cv/cv-utilisateurs/' ~ user.curriculumUser
+                  )
+                  }}"
+                  target="_blank">
+                  Voir votre CV
+                </a>
+              </p>
+            {% endif %}
+
+            <label for="curriculumUser">
+              Remplacer le CV (PDF uniquement) :
+            </label>
+            <input type="file" name="curriculumUser" accept="application/pdf" />
+
+            <div class="button-container">
+              <button type="submit" class="update-button">
+                Mettre à jour les informations
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div id="changePassword"
+          class="tabcontent-personal-information"
+          style="display:none;">
+          <form method="post"
+            action="{{ path('app_account_change_password') }}">
+            <input type="hidden"
+              name="_token"
+              value="{{ csrf_token('change_password') }}" />
+            <label for="current_password">Mot de passe actuel :</label>
+            <input type="password"
+              id="current_password"
+              name="current_password"
+              required />
+
+            <label for="new_password">Nouveau mot de passe :</label>
+            <input type="password"
+              id="new_password"
+              name="new_password"
+              required />
+
+            <label for="confirm_password">
+              Confirmer le nouveau mot de passe :
+            </label>
+            <input type="password"
+              id="confirm_password"
+              name="confirm_password"
+              required />
+
+            <div class="button-container">
+              <button type="submit" class="update-button">
+                Changer le mot de passe
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div id="updatePicture"
+          class="tabcontent-personal-information"
+          style="display:none; text-align: center;">
+          <form id="form-picture"
+            action="{{ path('app_account_update_picture') }}"
+            method="POST"
+            enctype="multipart/form-data">
+            <input type="hidden"
+              name="_token"
+              value="{{ csrf_token('update_picture') }}" />
+
+            <div class="img-container">
+              {% if user.pictureUser %}
+                <img src="{{ asset(
+                    '/images/photos-des-utilisateurs/' ~ user.pictureUser
+                  )|imagine_filter('thumbnail_large') }}"
+                  alt="Votre photo de profil"
+                  title="Votre photo de profil"
+                  loading="lazy" />
+              {% else %}
+                <img src="{{ asset(
+                    'images/general/images-des-formulaires/'
+                      ~ generalCineNetwork.replacementImage
+                  )|imagine_filter('thumbnail_medium') }}"
+                  alt="Photo de profil par défaut"
+                  title="Photo de profil par défaut"
+                  loading="lazy" />
+              {% endif %}
+            </div>
+
+            <input type="file"
+              name="pictureUser"
+              id="upload-picture"
+              accept="image/*"
+              style="display: none;"
+              onchange="document.getElementById('form-picture').submit();" />
+
+            <div class="button-container center-button">
+              <button type="button"
+                class="update-button"
+                onclick="document.getElementById('upload-picture').click()">
+                Modifier la photo
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div id="deleteAccount"
+          class="tabcontent-personal-information"
+          style="display:none;">
+          <form method="post"
+            action="{{ path('app_account_delete_account') }}"
+            onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')">
+            <input type="hidden"
+              name="_token"
+              value="{{ csrf_token('delete_account') }}" />
+            <p style="color: red;">
+              Attention : cette action est définitive.
+            </p>
+            <label for="confirm_delete">
+              Tapez <strong>DELETE</strong> pour confirmer :
+            </label>
+            <input type="text"
+              id="confirm_delete"
+              name="confirm_delete"
+              required />
+
+            <div class="button-container">
+              <button type="submit"
+                class="update-button"
+                style="background-color: red;">
+                Supprimer mon compte
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

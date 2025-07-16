@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un compte | La Ciné Network | Réseau du cinéma et de l'audiovisuel{% endblock %}
+
+{% block meta %}
+    <meta name="description" content="Créez votre compte sur La Ciné Network et rejoignez la communauté des passionnés et professionnels du cinéma. Bénéficiez d'un espace personnel pour publier des annonces, proposer vos films, et participer à nos événements.">
+    <meta name="keywords" content="inscription cinéma, créer un compte La Ciné Network, communauté cinéma, espace membre, publication annonces cinéma, proposer court-métrage, profil professionnel, réseau cinéma">
+    <meta property="og:title" content="Créer un compte - La Ciné Network">
+    <meta property="og:description" content="Inscrivez-vous gratuitement sur La Ciné Network pour accéder à toutes les fonctionnalités : annonces, films, événements et plus.">
+    <meta property="og:image" content="{{ asset('images/general/images-des-formulaires/' ~ generalCineNetwork.imgAbout) }}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.lacinenetwork.com/inscription" />
+{% endblock %}
+
+{% block body %}
+<section class="section-register">
+    <div class="image-container-register">
+    <img class="background-image-register" src="{{ asset('images/general/images-des-formulaires/' ~ generalCineNetwork.imgFormRegistration) | imagine_filter('fullscreen') }}" alt="Image de fond du formulaire de création de compte" loading="lazy" />
+        <div class="overlay-register"></div>
+    </div>
+
+    <div class="form-register-container">
+
+        {% for message in app.flashes('success') %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+
+        {% for flash_error in app.flashes('verify_email_error') %}
+            <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+        {% endfor %}
+
+        <h1>CRÉER UN COMPTE</h1>
+
+        {{ form_start(registrationForm) }}
+    <div class="scrollable-form-content">
+        <div class="form-row">
+            <div class="form-group">
+                {{ form_row(registrationForm.firstnameUser, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_row(registrationForm.lastnameUser, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                {{ form_row(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                {{ form_row(registrationForm.plainPassword, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <details class="form-details-register">
+        <summary class="summary-details-register">Compléter mon profil</summary>
+        <div class="form-column">
+            <div class="form-group">
+                {{ form_label(registrationForm.intermittentUser, null, {'label_attr': {'class': 'label-form-pre-registration-formation'}}) }}
+                {{ form_widget(registrationForm.intermittentUser, {'attr': {'class': 'input-form-pre-registration-formation'}}) }}
+                {{ form_errors(registrationForm.intermittentUser) }}
+            </div>
+            <div class="form-group">
+                {{ form_row(registrationForm.fieldOfEvolutionUser, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_row(registrationForm.telephoneUser, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_row(registrationForm.pictureUser, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_row(registrationForm.curriculumUser, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+        </details>
+
+        <div class="form-check">
+            {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
+            <label class="form-check-label" for="{{ registrationForm.agreeTerms.vars.id }}">
+                J’accepte les <a href="{{ path('app_rgpd') }}" target="_blank">conditions générales d’utilisation</a> *
+            </label>
+        </div>
+
+        <button type="submit" class="btn">Créer le compte</button>
+
+        <button type="button" class="btn" onclick="window.location.href='{{ path('app_login') }}'">
+            J'ai déjà un compte
+        </button>
+
+        {{ form_end(registrationForm) }}
+    </div>
+    </div>
+</section>
+{% endblock %}

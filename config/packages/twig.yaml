@@ -1,0 +1,21 @@
+twig:
+    file_name_pattern: '*.twig'
+    default_path: '%kernel.project_dir%/templates'
+    globals:
+        locale: 'fr'
+    paths:
+        '%kernel.project_dir%/templates': ~
+    # Activation correcte de twig/intl-extra
+    # On ne met pas "extensions" ici, mais on s'assure qu'il est bien installé
+    date:
+        format: 'd F Y'
+        interval_format: '%d jours'
+        timezone: 'Europe/Paris'
+    number_format:
+        decimals: 2
+        decimal_point: ','
+        thousands_separator: ' '
+
+when@test:
+    twig:
+        strict_variables: true

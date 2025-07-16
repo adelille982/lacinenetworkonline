@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  {% if otherHeader is defined and otherHeader.titleSeoPage is not empty %}
+    {{ otherHeader.titleSeoPage|striptags }}
+  {% else %}
+    RGPD | La Ciné Network | Réseau du cinéma et de l'audiovisuel
+  {% endif %}
+{% endblock %}
+
+{% block meta %}
+  {% if otherHeader is defined %}
+    <meta name="description"
+      content="{{
+      otherHeader.metaDescriptionPage|striptags is not empty
+        ? otherHeader.metaDescriptionPage|striptags
+        : 'Découvrez comment La Ciné Network garantit la confidentialité, la sécurité et la transparence de vos données personnelles.'
+      }}" />
+    <meta name="keywords"
+      content="{{
+      otherHeader.seoKeyPage|striptags is not empty
+        ? otherHeader.seoKeyPage|striptags
+        : 'La Ciné Network, RGPD, Politique de confidentialité, Données personnelles, Sécurité, Audiovisuel'
+      }}" />
+  {% else %}
+    <meta name="description"
+      content="Découvrez comment La Ciné Network garantit la confidentialité, la sécurité et la transparence de vos données personnelles." />
+    <meta name="keywords"
+      content="La Ciné Network, RGPD, Politique de confidentialité, Données personnelles, Sécurité, Audiovisuel" />
+  {% endif %}
+{% endblock %}
+
+{% block body %}
+  {% include 'general/other-header/header-rgpd.html.twig' %}
+  <section class="rgpd-section-2">
+    <div class="rgpd-container-2">
+      <div class="rgpd-content-2">
+      {% if generalCineNetwork is defined and generalCineNetwork.rgpdContent is not empty %}
+        {{ generalCineNetwork.rgpdContent|raw }}
+      {% else %}
+        <p class="rgpd-empty-2">
+          Aucune politique de confidentialité n’a encore été définie pour le moment.
+        </p>
+      {% endif %}
+      </div>
+    </div>
+  </section>
+{% endblock %}

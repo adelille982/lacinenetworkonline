@@ -1,0 +1,45 @@
+<table width="100%" cellpadding="0" cellspacing="0" style="padding: 20px 0;">
+  <tr>
+    <td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff; border-radius:8px; overflow:hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <tr>
+          <td style="background-color:#000000; padding:20px; text-align:center;">
+            <h1 style="color:#feda00; margin:0; font-size:24px;">La Ciné Network - Validation d'inscription</h1>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:30px;">
+            <h2 style="color:#222222;">Bonjour {{ registration.firstnameRegistration }} {{ registration.lastnameRegistration }},</h2>
+            <p style="font-size:16px; color:#333333; line-height:1.6;">
+              Nous avons le plaisir de vous informer que votre <strong>inscription à la formation {{ registration.sessionNetPitchFormation.netPitchFormation.titleNetPitchFormation }}</strong> a été <span style="background-color:#28a745; color:#fff; padding:2px 6px; border-radius:4px;">validée</span>.
+            </p>
+            <h3 style="margin-top:30px; color:#000;">📅 Vous êtes attendu(e) pour la session suivante :</h3>
+            <p style="font-size:16px; color:#333333; line-height:1.6;">
+              <br><strong>Du {{ registration.sessionNetPitchFormation.startDateSessionNetPitchFormation|date('d/m/Y') }} au {{ registration.sessionNetPitchFormation.endDateSessionNetPitchFormation|date('d/m/Y') }}</strong>
+              <br><strong>Lieu :</strong> 
+              {% if registration.sessionNetPitchFormation.location %}
+                {{ registration.sessionNetPitchFormation.location.streetLocation }}, {{ registration.sessionNetPitchFormation.location.postalCode }} {{ registration.sessionNetPitchFormation.location.cityLocation|upper }}
+              {% else %}
+                En ligne
+              {% endif %}
+            </p>
+            <p style="font-size:16px; color:#333333; line-height:1.6; margin-top:30px;">
+              Un membre de notre équipe vous contactera prochainement par téléphone
+              (<strong>{{ registration.telRegistration }}</strong>) ou par email
+              (<strong>{{ registration.emailRegistration }}</strong>) pour la suite.
+            </p>
+            <p style="font-size:16px; color:#333333; line-height:1.6;">
+              À très bientôt,<br>
+              <em>L’équipe  La Ciné Network</em>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td style="background-color:#f1f1f1; text-align:center; padding:15px; font-size:12px; color:#777777;">
+            &copy; {{ "now"|date("Y") }} La Ciné Network. Tous droits réservés.
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>

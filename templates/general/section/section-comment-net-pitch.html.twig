@@ -1,0 +1,145 @@
+<section class="comment-net-pitch-section">
+  <div class="comment-net-pitch-container">
+    <img class="comment-net-pitch-img"
+      src="{{ asset(
+        'images/general/images-des-formulaires/'
+          ~ generalCineNetwork.imgCommentNetPitch
+      )|imagine_filter('fullscreen') }}"
+      alt="Image de fond commentaires Net Pitch"
+      loading="lazy" />
+    <div class="overlay-comment-net-pitch"></div>
+  </div>
+  <div class="comment-net-pitch-content">
+    <div class="form-comment-net-pitch">
+      <h2 id="commentaires-formations">
+        VOUS AVEZ <span class="span-color-comment-event">DÉJÀ PARTICIPÉ</span> À
+        L’UNE DE NOS FORMATIONS ?
+      </h2>
+      <p>
+        Dites-nous ce que vous en avez pensé
+      </p>
+
+      <div class="flash-container-comment-net-pitch">
+        {% for message in all_flashes['comment_net_pitch_error'] ?? [] %}
+          <div class="flash-message-error-comment-net-pitch">
+            {{ message }}
+          </div>
+        {% endfor %}
+        {% for message in all_flashes['comment_net_pitch_success'] ?? [] %}
+          <div class="flash-message-success-comment-net-pitch">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+
+      <form method="post">
+        <input type="hidden"
+          name="slug"
+          value="{{ formation.slugNetPitchformation }}" />
+
+        <div class="form-group-comment-net-pitch">
+          <label class="label-comment-net-pitch" for="event">
+            DE QUELLE FORMATION S'AGIT-IL ? *
+          </label>
+          <select id="event" name="event" required>
+            <option value="" disabled selected>
+              Choisissez une formation
+            </option>
+            {% for formation in formations %}
+              <option value="{{ formation.titleNetPitchFormation }}">
+                {{ formation.titleNetPitchFormation }}
+              </option>
+            {% endfor %}
+          </select>
+
+          <label class="label-comment-net-pitch" for="comment">
+            QU'AVEZ-VOUS APPRÉCIÉ LORS DE CETTE FORMATION ? *
+          </label>
+          <textarea id="comment" name="comment" required></textarea>
+
+          <div class="form-announcement-input"
+            style="display: flex; align-items: center; gap: 10px;">
+            <input type="checkbox"
+              id="terms-comment-net-pitch"
+              name="terms-comment-net-pitch"
+              required
+              style="width: 18px; height: 18px; cursor: pointer;" />
+            <label for="terms-comment-net-pitch"
+              class="label-comment-net-pitch"
+              style="margin: 0;">
+              J'accepte les <a href="{{ path('app_rgpd') }}"
+                target="_blank"
+                style="color: white; text-decoration: underline;">
+                conditions générales d’utilisation
+              </a> *
+            </label>
+          </div>
+
+          <button class="btn-form-comment-net-pitch"
+            type="submit-comment-net-pitch"
+            name="submit-comment-net-pitch">
+            ENVOYER
+          </button>
+        </div>
+      </form>
+    </div>
+
+    {% if commentaries is not empty %}
+      <div class="comment-net-pitch-user-block" id="comment-slider-wrapper">
+        <div id="comment-slider-track">
+          {% for commentary in commentaries %}
+            <div class="comment-net-pitch-user-container">
+              <div class="logo-comment-net-pitch">
+                <img src="{{
+                  asset(
+                    'images/general/logo-commentaire.png'
+                  )
+                  }}"
+                  alt="Logo Comment Network" />
+              </div>
+              <div class="comment-net-pitch-user-content">
+                <div class="profile-comment-net-pitch">
+                  {% if commentary.user.pictureUser %}
+                    <img src="{{
+                      asset(
+                        'images/photos-des-utilisateurs/'
+                          ~ commentary.user.pictureUser
+                      )
+                      }}"
+                      alt="Photo de {{ commentary.user.firstnameUser }}" />
+                  {% else %}
+                    <img src="{{ ('images/general/images-des-formulaires/'
+                        ~ generalCineNetwork.replacementImage)|imagine_filter(
+                        'thumbnail_medium'
+                      ) }}"
+                      alt="Photo de profil par défault de l'utlisateur"
+                      loading="lazy" />
+                  {% endif %}
+                  <span>
+                    {{ commentary.user.firstnameUser ~ ' '
+                      ~ (commentary.user.lastnameUser|first|upper)
+                      ~ '.' }}
+                  </span>
+                </div>
+                <div class="comment-net-pitch-user-locality">
+                  <div class="span-comment-user-net-pitch">
+                    <p>
+                      {{
+                        commentary.netPitchFormation.titleNetPitchFormation|raw
+                      }}
+                    </p>
+                  </div>
+                  <div class="text-comment-user-net-pitch">
+                    <p>
+                      {{ commentary.textCommentary|raw }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>

@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  {% if formation.titleNetPitchFormation is not empty %}
+    {{ formation.titleNetPitchFormation|striptags }} {{ otherHeader.titleSeoPage|striptags }}
+  {% elseif otherHeader is defined and otherHeader.titleSeoPage is not empty %}
+    {{ otherHeader.titleSeoPage|striptags }}
+  {% else %}
+    Formation | La Ciné Network | Réseau du cinéma et de l'audiovisuel
+  {% endif %}
+{% endblock %}
+
+{% block meta %}
+  {% set metaDescription = formation.metaDescriptionNetPitchFormation is not empty
+    ? formation.metaDescriptionNetPitchFormation|striptags
+    : (otherHeader is defined and otherHeader.metaDescriptionPage is not empty
+        ? otherHeader.metaDescriptionPage|striptags
+        : 'Découvrez nos formations pour les talents du cinéma : ateliers, sessions de pitch, accompagnement professionnel et réseautage.') 
+  %}
+
+  {% set metaKeywords = formation.seoKeyNetPitchFormation is not empty
+    ? formation.seoKeyNetPitchFormation|striptags
+    : (otherHeader is defined and otherHeader.seoKeyPage is not empty
+        ? otherHeader.seoKeyPage|striptags
+        : 'formation cinéma, pitch, La Ciné Network, audiovisuel, carrière cinéma, atelier film') 
+  %}
+
+  <meta name="description" content="{{ metaDescription }}">
+  <meta name="keywords" content="{{ metaKeywords }}">
+
+  <meta property="og:title" content="{{ formation.titleNetPitchFormation|default('Formation La Ciné Network')|striptags }}">
+  <meta property="og:description" content="{{ metaDescription }}">
+  <meta property="og:image" content="{{ asset('images/general/images-des-formulaires/' ~ generalCineNetwork.imgAbout) }}" />
+  <meta property="og:type" content="website">
+{% endblock %}
+
+{% block body %}
+{% set all_flashes = app.flashes %}
+    {% include 'general/other-header/header-net-pitch.html.twig' %}
+    {% set now = "now"|date('Y-m-d H:i:s') %}
+    {% set futureSessions = sessions|filter(s => s.startDateSessionNetPitchFormation > date(now) and not s.draft) %}
+    {% set session = futureSessions|first %}
+    {% include 'net-pitch/sheet-formation-net-pitch.html.twig' %}
+    {% include 'net-pitch/display-speaker-formation.html.twig' %}
+    {% include 'general/section/section-comment-net-pitch.html.twig' %}
+    {% include 'net-pitch/detail-formation-net-pitch.html.twig' %}
+    {% include 'net-pitch/display-formation-net-pitch.html.twig' %}
+    {% include 'net-pitch/pre-registration.html.twig' %}
+    {% include 'general/pop-up/pop-up-speaker-formation.html.twig' %}
+    {% include 'general/pop-up/pop-up-project.html.twig' %}
+{% endblock %}

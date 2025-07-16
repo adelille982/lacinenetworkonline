@@ -1,0 +1,149 @@
+{% if hasArchivedEventsForCommentary %}
+  <section class="comment-network-section" id="commentaires-network">
+    <div class="comment-network-container">
+      <img class="comment-network-img"
+        src="{{ asset(
+          'images/general/images-des-formulaires/'
+            ~ generalCineNetwork.imgCommentNetwork
+        )|imagine_filter('fullscreen') }}"
+        alt="Image de fond commentaires Network"
+        loading="lazy" />
+      <div class="overlay-comment-network"></div>
+    </div>
+    <div class="comment-network-content">
+      <div class="form-comment-network">
+        <h2>
+          VOUS ÊTES <span class="span-color-comment-event">DÉJÀ VENU</span> À L’UN
+          DE NOS ÉVÉNEMENTS ?
+        </h2>
+        <p>
+          Dites nous ce que vous en avez pensé
+        </p>
+
+        <div class="flash-container-comment-net-pitch">
+          {% for message in all_flashes['comment_network_error'] ?? [] %}
+            <div class="flash-message-error-comment-network-home">
+              {{ message }}
+            </div>
+          {% endfor %}
+          {% for message in all_flashes['comment_network_success'] ?? [] %}
+            <div class="flash-message-success-comment-network-home">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+
+        <form method="post">
+          <div class="form-group-comment-network">
+            <label class="label-comment-network" for="event">
+              À QUEL ÉVÉNEMENT ÉTIEZ-VOUS PRÉSENT ? *
+            </label>
+            <select id="event" name="event" required>
+              <option value="" disabled selected>
+                Choisissez un événement
+              </option>
+              {% for archived in archivedEvents %}
+                <option value="{{ archived.id }}">
+                  {{ archived.event.titleEvent }} du {{
+                    archived.event.dateEvent|date('d/m/Y')
+                  }} à {{ archived.event.location.cityLocation }}
+                </option>
+              {% endfor %}
+            </select>
+
+            <label class="label-comment-network" for="comment">
+              QU'AVEZ-VOUS APPRÉCIÉ LORS DE CET ÉVÉNEMENT ? *
+            </label>
+            <textarea id="comment" name="comment" required></textarea>
+
+            <div class="form-announcement-input"
+              style="display: flex; align-items: center; gap: 10px;">
+              <input type="checkbox"
+                id="terms-comment-network"
+                name="terms-comment-network"
+                required
+                style="width: 18px; height: 18px; cursor: pointer;" />
+              <label for="terms-comment-network"
+                class="label-comment-network"
+                style="margin: 0;">
+                J'accepte les <a href="{{ path('app_rgpd') }}"
+                  target="_blank"
+                  style="color: white; text-decoration: underline;">
+                  conditions générales d’utilisation
+                </a> *
+              </label>
+            </div>
+
+            <button class="btn-form-comment-network"
+              type="submit"
+              name="submit-comment-network">
+              ENVOYER
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {% if validatedEventComments is not empty %}
+        <div class="comment-network-user-block"
+          id="comment-slider-wrapper-network">
+          <div id="comment-slider-track-network">
+            {% for commentary in validatedEventComments %}
+              <div class="comment-network-user-container">
+                <div class="logo-comment-network">
+                  <img src="{{
+                    asset(
+                      'images/general/logo-commentaire.png'
+                    )
+                    }}"
+                    alt="Logo" />
+                </div>
+                <div class="comment-network-user-content">
+                  <div class="profile-comment-network">
+                    {% if commentary.user.pictureUser %}
+                      <img src="{{
+                        asset(
+                          'images/photos-des-utilisateurs/'
+                            ~ commentary.user.pictureUser
+                        )
+                        }}"
+                        alt="Photo de {{ commentary.user.firstnameUser }}" />
+                    {% else %}
+                      <img src="{{ ('images/general/images-des-formulaires/'
+                          ~ generalCineNetwork.replacementImage)|imagine_filter(
+                          'thumbnail_medium'
+                        ) }}"
+                        alt="Photo de profil par défault de l'utlisateur"
+                        loading="lazy" />
+                    {% endif %}
+                    <span>
+                      {{ commentary.user.firstnameUser }}
+                      {{ (commentary.user.lastnameUser|first|upper) ~ '.' }}
+                    </span>
+                  </div>
+                  <div class="comment-network-user-locality">
+                    <div class="span-comment-user-network">
+                      <span>
+                        {{ commentary.archivedEvent.event.titleEvent|raw }}
+                        du {{
+                          commentary.archivedEvent.event.dateEvent|date('d/m/Y')
+                        }}
+                        à {{
+                          commentary.archivedEvent.event.location.cityLocation|raw
+                        }}
+                      </span>
+                    </div>
+                    <div class="text-comment-user-network">
+                      <p>
+                        {{ commentary.textCommentary|raw }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+{% endif %}

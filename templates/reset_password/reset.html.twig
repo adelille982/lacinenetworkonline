@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Réinitialisation du mot de passe | La Ciné Network | Réseau du cinéma et de
+  l'audiovisuel
+{% endblock %}
+
+{% block body %}
+  <div class="reset-password-wrapper">
+    <div class="reset-password-card">
+      <h1 class="reset-password-title">
+        🔐 Réinitialiser votre mot de passe
+      </h1>
+      <p class="reset-password-text">
+        Veuillez saisir un nouveau mot de passe pour votre compte.
+      </p>
+
+      {{ form_start(resetForm) }}
+      <div class="reset-password-form-group">
+        {{
+          form_widget(
+            resetForm.plainPassword.first,
+            {
+              attr: {
+                placeholder: 'Nouveau mot de passe'
+              }
+            }
+          )
+        }}
+        {{ form_errors(resetForm.plainPassword.first) }}
+      </div>
+
+      <div class="reset-password-form-group">
+        {{
+          form_widget(
+            resetForm.plainPassword.second,
+            {
+              attr: {
+                placeholder: 'Répéter le mot de passe'
+              }
+            }
+          )
+        }}
+        {{ form_errors(resetForm.plainPassword.second) }}
+      </div>
+
+      <button type="submit" class="reset-password-button">
+        Réinitialiser le mot de passe
+      </button>
+      {{ form_end(resetForm) }}
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,131 @@
+{% set countFutureSessions = futureSessions|length %}
+{% if countFutureSessions > 0 %}
+<section class="total-form-pre-registration-formation-container">
+
+    <div class="img-form-pre-registration-formation-container">
+    {% if generalCineNetwork is not empty %}
+    <img 
+        src="{{ ('images/general/images-des-formulaires/' ~ generalCineNetwork.imgFormNetPitch) | imagine_filter('fullscreen') }}"
+        alt="Image du formulaire de pré-inscription"
+        class="img-form-pre-registration-formation"
+        loading="lazy" />
+    {% endif %}
+    </div>
+
+    <div class="form-pre-registration-formation-container">
+
+        <h2 class="title-form-pre-registration-formation" id="pre-inscription">PRÉ-INSCRIPTION</h2>
+
+			<div class="flash-container-pre-inscription-net-pitch">
+			{% for message in all_flashes['preinscription_error'] ?? [] %}
+				<div class="flash-message-error-pre-inscription-net-pitch">{{ message }}</div>
+			{% endfor %}
+			{% for message in all_flashes['preinscription_success'] ?? [] %}
+				<div class="flash-message-success-pre-inscription-net-pitch">{{ message }}</div>
+			{% endfor %}
+			</div>
+
+        <form action="{{ path('app_net-pitch', { slug: formation.slugNetPitchformation }) }}" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="slug" value="{{ formation.slugNetPitchformation }}">
+
+            <div class="form-pre-registration-formation-content">
+
+                <div class="form-flex-container-pre-registration-formation">
+                    <div class="form-pre-registration-formation-input">
+                        <label for="last-name-form-formation" class="label-form-pre-registration-formation">Nom de famille :</label>
+                        <input type="text" name="last-name-form-formation" id="last-name-form-formation" class="input-form-pre-registration-formation" required>
+                    </div>
+                    <div class="form-pre-registration-formation-input">
+                        <label for="first-name-form-formation" class="label-form-pre-registration-formation">Prénom :</label>
+                        <input type="text" name="first-name-form-formation" id="first-name-form-formation" class="input-form-pre-registration-formation" required>
+                    </div>
+                </div>
+
+                <div class="form-flex-container-pre-registration-formation">
+                    <div class="form-pre-registration-formation-input">
+                        <label for="email-form-formation" class="label-form-pre-registration-formation">Email :</label>
+                        <input type="email" name="email-form-formation" id="email-form-formation" class="input-form-pre-registration-formation" required>
+                    </div>
+                    <div class="form-pre-registration-formation-input">
+                        <label for="phone-form-formation" class="label-form-pre-registration-formation">Téléphone :</label>
+                        <input type="tel" name="phone-form-formation" id="phone-form-formation" class="input-form-pre-registration-formation" required>
+                    </div>
+                </div>
+
+                <div class="form-pre-registration-formation-input">
+                    <label for="formation-select">Formation souhaitée :</label>
+                    <select id="formation-select" name="formation-select" class="input-form-pre-registration-formation" required>
+                        <option value="">Sélectionner une formation</option>
+                        {% for f in formations %}
+                        <option 
+                            value="{{ f.id }}" 
+                            data-slug="{{ f.slugNetPitchformation }}" 
+                            data-sessions='{{ f.sessionNetPitchFormations
+                                |filter(s => not s.draft and s.startDateSessionNetPitchFormation > "now"|date("Y-m-d H:i:s"))
+                                |map(s => {
+                                    "id": s.id,
+                                    "label": s.startDateSessionNetPitchFormation|date("d/m/Y") ~ " au " ~ s.endDateSessionNetPitchFormation|date("d/m/Y"),
+                                    "location": s.location
+                                        ? s.location.streetLocation ~ ', ' ~ s.location.postalCode ~ ' ' ~ s.location.cityLocation|upper
+                                        : "EN LIGNE"
+                                })
+                                |json_encode
+                            }}'>
+                            {{ f.titleNetPitchFormation }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-flex-container-pre-registration-formation">
+                    <div class="form-pre-registration-formation-input">
+                        <label for="session-select">Session souhaitée :</label>
+                        <select id="session-select" class="input-form-pre-registration-formation" required disabled>
+                        <option value="">Sélectionner une session</option>
+                        </select>
+                        <input type="hidden" name="selected-session-form-formation" id="selected-session-form-formation">
+                    </div>
+                    <div class="form-pre-registration-formation-input">
+                        <label for="location-display">Lieu :</label>
+                        <input type="text" id="location-display" class="input-form-pre-registration-formation" readonly>
+                    </div>
+                </div>
+
+                <div class="form-pre-registration-formation-input">
+                    <label for="afdas-select" class="label-form-pre-registration-formation">
+                        Êtes-vous éligible à l'AFDAS en tant qu'intermittent ou artiste-auteur ?
+                    </label>
+                    <select id="afdas-select" name="afdas" class="input-form-pre-registration-formation" required>
+                        <option value="">Sélectionner une option</option>
+                        <option value="1">Oui</option>
+                        <option value="0">Non</option>
+                    </select>
+                </div>
+
+                <div class="form-pre-registration-formation-input">
+                    <label for="short-description-form-formation" class="label-form-pre-registration-formation">Décrivez-nous en quelques lignes votre projet professionnel / de formation :</label>
+                    <textarea name="short-description-form-formation" id="short-description-form-formation" class="input-form-pre-registration-formation" rows="4" required></textarea>
+                </div>
+
+                <div class="form-pre-registration-formation-input">
+                    <label for="cv-upload-form-formation" class="label-form-pre-registration-formation">Téléchargez votre dossier artistique (pitch,synopsis, note d'intention, scénario, biographie, cv) :</label>
+                    <input type="file" name="cv-upload-form-formation" id="cv-upload-form-formation" class="input-form-pre-registration-formation file-input" accept=".pdf,.doc,.docx" required>
+                    <small class="file-info">Formats acceptés : PDF, DOC, DOCX.</small>
+                </div>
+
+                <div class="form-pre-registration-formation-input">
+                <label style="display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" name="accept-conditions" required>
+                    <span>J’accepte les <a href="{{ path('app_rgpd') }}" target="_blank">conditions générales</a> de participation</span>
+                </label>
+                </div>
+
+                <div class="form-pre-registration-formation-btn">
+                    <button type="submit" class="btn-form-pre-registration-formation" name="submit-pre-inscription">ENVOYER VOTRE PRÉ-INSCRIPTION</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</section>
+{% endif %}

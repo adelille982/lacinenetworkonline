@@ -1,0 +1,23 @@
+<section class="display-article-blog-section">
+    {% for blogPost in blogPosts|slice(0, 3) %}
+        <a href="{{ path('app_blog_post_show', { slug: blogPost.slugBlogPost }) }}" class="display-article-blog-link">
+            <div class="display-article-blog-container">
+                <div class="number-article-blog">
+                    <p>{{ loop.index|format('%02d') }}</p>
+                </div>
+                <div class="content-article-blog">
+                    <span>
+                        POSTÉ PAR {{ blogPost.authorBlogPost|upper }} |
+                        LE {{ blogPost.publicationDateBlogPost|format_datetime(locale='fr', pattern='d MMMM Y')|upper }}
+                    </span>
+                    <h2>{{ blogPost.titlePost }}</h2>
+                </div>
+                <img class="background-image"
+                src="{{ ('images/blog/article-de-blog/' ~ blogPost.mainImgPost) | imagine_filter('fullscreen') }}"
+                alt= "Image principal de l'article {{ blogPost.titlePost }}"
+                loading="lazy" />
+                <div class="overlay-display-article-blog"></div>
+            </div>
+        </a>
+    {% endfor %}
+</section>

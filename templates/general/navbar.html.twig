@@ -1,0 +1,119 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <button class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarContent"
+      aria-controls="navbarContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-between"
+      id="navbarContent">
+      <div class="d-flex navbar-brand-group me-auto">
+
+        <a class="navbar-brand fw-bold" href="{{ path('app_index') }}">
+          LA CINÉ NETWORK
+        </a>
+        {% if firstFormationSlug %}
+          <a class="navbar-brand fw-bold" href="{{ path('app_net-pitch', { slug: firstFormationSlug }) }}">
+            NOS FORMATIONS
+          </a>
+        {% endif %}
+      </div>
+
+      {% if generalCineNetwork is not null and generalCineNetwork.telCompany is not empty %}
+        <div class="navbar-contact">
+          <a href="tel:{{ generalCineNetwork.telCompany }}" class="badge bg-light text-dark p-2 rounded">
+            <strong>{{ generalCineNetwork.telCompany }}</strong>
+          </a>
+        </div>
+      {% endif %}
+
+      <ul class="navbar-nav navbar-links">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" id="annoncesDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">Offres & Candidatures</a>
+          <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="annoncesDropdown">
+            <li><a class="dropdown-item" href="{{ path('app_announcement') }}">Annonces Audiovisuelles</a></li>
+            {% if generalCineNetwork is defined and generalCineNetwork.shortFilmProposalHome %}
+            <li><a href="{{ path('app_index') }}#open-shortfilm-popup" class="dropdown-item open-shortfilm-proposal">Proposez votre court-métrage</a></li>
+            {% endif %}
+            <li><a class="dropdown-item" href="{{ path('app_postulate') }}">Postuler</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="{{ path('app_home_blog') }}">Blog</a></li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ path('app_about') }}">À propos</a>
+        </li>
+        <li class="nav-item">
+          <a class="btn btn-outline-light"
+            href="{{ path('app_index') }}#nous-contacter">
+            <strong>Contact</strong>
+          </a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle"
+            href="#"
+            id="userDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="bi bi-person-circle"></i>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end"
+            aria-labelledby="userDropdown">
+            <li>
+              <a class="dropdown-item" href="{{ path('app_register') }}">
+                Créer un compte
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{{ path('app_login') }}">
+                Connexion
+              </a>
+            </li>
+            {% if
+              (app.user and is_granted('ROLE_USER_NETWORK'))
+                or is_granted('ROLE_SUPER_ADMIN')
+                or is_granted('ROLE_ADMIN')
+                or is_granted('ROLE_SUB_ADMIN')
+                or is_granted('ROLE_SUB_ADMIN_FORMATION')
+                or is_granted('ROLE_SUB_ADMIN_ANNOUNCEMENT')
+                or is_granted('ROLE_SUB_ADMIN_EVENT')
+                or is_granted('ROLE_SUB_ADMIN_BLOG')
+                or is_granted('ROLE_SUB_ADMIN_COMMENTARY')
+                or is_granted('ROLE_SUB_ADMIN_GESTION') %}
+              <li>
+                <a class="dropdown-item" href="{{ path('app_account') }}">
+                  Mon compte
+                </a>
+              </li>
+            {% endif %}
+
+            {% if app.user %}
+              <li>
+                <a class="dropdown-item" href="{{ path('app_logout') }}">
+                  Déconnexion
+                </a>
+              </li>
+            {% endif %}
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+  {% if
+    is_granted('ROLE_ADMIN')
+      or is_granted('ROLE_SUB_ADMIN')
+      or is_granted('ROLE_SUB_ADMIN_FORMATION')
+      or is_granted('ROLE_SUB_ADMIN_ANNOUNCEMENT')
+      or is_granted('ROLE_SUB_ADMIN_EVENT')
+      or is_granted('ROLE_SUB_ADMIN_BLOG')
+      or is_granted('ROLE_SUB_ADMIN_COMMENTARY')
+      or is_granted('ROLE_SUB_ADMIN_GESTION') %}
+    <a href="{{ path('admin') }}"><i class="bi bi-gear icon-admin"></i></a>
+  {% endif %}
+</nav>

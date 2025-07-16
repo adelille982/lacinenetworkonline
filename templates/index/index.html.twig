@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  {{ (generalCineNetwork.titleGeneralCineNetwork | default('La Ciné Network - Réseau du cinéma et de l\'audiovisuel')) | striptags }}
+{% endblock %}
+
+{% block meta_description %}
+  <meta name="description" content="{{ (generalCineNetwork.metaDescriptionGeneralCineNetwork | default('La Ciné Network est un réseau dédié aux passionnés et professionnels du cinéma. Découvrez nos événements, nos partenaires et les projets que nous accompagnons.')) | striptags }}">
+{% endblock %}
+
+{% block meta %}
+  <meta name="keywords" content="{{ (generalCineNetwork.seoKeyGeneralCineNetwork | default('La Ciné Network, Cinéma, Réseautage, Talents, Événements, Courts-métrages, Pitchs, Networking, Créativité, Innovation')) | striptags }}">
+  <meta name="author" content="La Ciné Network">
+  <meta property="og:title" content="{{ (generalCineNetwork.titleGeneralCineNetwork | default('La Ciné Network - Réseau du cinéma et de l\'audiovisuel')) | striptags }}" />
+  <meta property="og:description" content="{{ (generalCineNetwork.metaDescriptionGeneralCineNetwork | default('La Ciné Network est un réseau dédié aux passionnés et professionnels du cinéma. Découvrez nos événements, nos partenaires et les projets que nous accompagnons.')) | striptags }}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.lacinenetwork.com" />
+  <meta property="og:image" content="{{ asset('images/general/images-des-formulaires/' ~ generalCineNetwork.imgAbout) }}" />
+
+{% endblock %}
+
+
+{% block body %}
+  {% set all_flashes = app.flashes %}
+  {% include 'index/header-home.html.twig' %}
+  {% include 'index/display-event.html.twig' with { firstEvent: firstEvent } %}
+  {% include 'index/display-short-films.html.twig' %}
+  {% include 'net-pitch/display-formation-net-pitch.html.twig' %}
+  {% include 'index/old-event.html.twig' %}
+  {% include 'general/section/section-comment-network.html.twig' %}
+  {% include 'index/display-article-blog.html.twig' %}
+  {% include 'index/partners.html.twig' %}
+  {% include 'index/form-contact-home.html.twig' %}
+  {% include 'general/pop-up/pop-up-project.html.twig' %}
+  {% include 'general/pop-up/pop-up-director.html.twig' %}
+  {% include 'general/pop-up/pop-up-jury.html.twig' %}
+  {% include 'general/pop-up/pop-up-short-films.html.twig' %}
+  {% include 'general/pop-up/pop-up-message.html.twig' %}
+{% endblock %}
+

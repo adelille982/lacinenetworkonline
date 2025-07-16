@@ -1,0 +1,543 @@
+{% set showChevronsEvent = allEventIds|length > 1 %}
+{% if firstEvent is defined and firstEvent %}
+<section class="section-event-home hidden-before-load" id="section-event-home">
+{% if showChevronsEvent %}
+  <div class="chevron-sheet-display-event-container">
+      <div class="chevron-sheet-display-event-chevron-left">
+          <i class="bi bi-chevron-compact-left chevron-left-display-event-sheet"></i>
+      </div>
+      <div class="chevron-sheet-display-event-chevron-right">
+          <i class="bi bi-chevron-compact-right chevron-right-display-event-sheet"></i>
+      </div>
+  </div>
+{% endif %}
+  <div class="event-home-container">
+    <img src="{{ asset('images/evenements/images-evenements/' ~ firstEvent.imgEvent) | imagine_filter('fullscreen') }}"
+     alt="Image de l'événement {{ firstEvent.titleEvent }}"
+     loading="lazy" />
+    <div class="overlay-event-home"></div>
+
+    {% if firstEvent.userEvents|length > 0 %}
+    <h2 id="toggle-participants-{{ firstEvent.id }}" class="title-btn-participants">
+      PARTICIPANTS ☰
+    </h2>
+
+    <div id="participants-container" class="participants-events">
+      <ul class="participants-list">
+        {% for userEvent in firstEvent.userEvents %}
+          <li class="participants-list-title">
+            {% if userEvent.user.pictureUser %}
+            <img src="{{ asset('images/photos-des-utilisateurs/' ~ userEvent.user.pictureUser)}}"
+            alt="Photo de profil de l'utlisateur"
+            loading="lazy" />
+            {% else %}
+            <img src="{{ ('images/general/images-des-formulaires/' ~ generalCineNetwork.replacementImage) | imagine_filter('thumbnail_medium') }}"
+            alt="Photo de profil par défault de l'utlisateur"
+            loading="lazy" />
+            {% endif %}
+            
+            {{ userEvent.user.firstnameUser }} {{ userEvent.user.lastnameUser | slice(0, 1) ~ "." }}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <div class="event-home-container-1">
+      <div class="event-title-home">
+        <div class="event-sheet">
+          <div class="event-sheet-title-and-share">
+            <h2 id="inscription-evenement" class="title-event-home">
+                INSCRIPTION À <span class="event-title-home-color">{{ firstEvent.titleEvent|upper }}</span> DU {{ firstEvent.dateEvent|format_datetime(locale='fr', pattern='d MMMM Y')|upper }}
+            </h2>
+            {% if not eventIsArchived  %}
+            <p>
+              <i class="bi bi-share-fill share-event"></i>
+            </p>
+            {% endif %}
+          </div>
+          <div class="event-text-scrollable">
+            <p class="event-text-home">
+              {{ firstEvent.textEvent|striptags }}
+            </p>
+          </div>
+          {% if not eventIsArchived  %}
+          <p class="event-text-home">
+            {% if firstEvent.free %}
+              Les places sont limitées, inscrivez-vous vite ! Billetterie gratuite.
+            {% else %}
+              Les places sont limitées, inscrivez-vous vite ! Le tarif est de 
+              <a href="https://www.google.com/maps/search/distributeur+proche+{{ (firstEvent.location.streetLocation ~ ' ' ~ firstEvent.location.postalCode ~ ' ' ~ firstEvent.location.cityLocation)|url_encode }}" 
+                target="_blank" 
+                class="distributeur-link">
+                <span class="price-highlight">{{ firstEvent.priceEvent }} euros,</span>
+              </a> à régler sur place.
+            {% endif %}
+          </p>
+          {% endif %}
+        </div>
+
+        {% set isNetworkEvent = firstEvent.typeEvent == 'Network' %}
+        {% set jurySpeakers = firstEvent.speakers|filter(speaker => speaker.typeSpeaker == 'Jury' and speaker.statutSpeaker == 'Validé') %}
+        {% set hasJury = jurySpeakers|length > 0 %}
+
+        {% if not isNetworkEvent and hasJury %}
+            <div class="jury-event-home">
+                <h2><span class="event-title-home-color">JURY</span> PRÉSENT CE JOUR LÀ</h2>
+                <div class="jury-event-home-container">
+                    <div class="jury-slider-wrapper">
+                        <div class="jury-slider-track" id="jury-slider-track">
+                            {% for speaker in jurySpeakers|slice(0, 3) %}
+                                <div class="img-jury">
+                                      <img 
+                                          src="{{ asset('images/intervenants/jury/jury-profil/' ~ speaker.pictureSpeaker) }}"
+                                          alt="Photo du jury {{ speaker.firstNameSpeaker }} {{ speaker.lastNameSpeaker }}"
+                                          loading="lazy"
+                                          data-img="{{ asset('images/intervenants/jury/jury-pop-up/' ~ speaker.imgPopUpSpeaker) }}"
+                                          data-name="{{ speaker.firstNameSpeaker }} {{ speaker.lastNameSpeaker }}"
+                                          data-role="{{ speaker.roleSpeaker }}"
+                                          data-bio="{{ speaker.biographySpeaker|e('html_attr') }}"
+                                          data-company="{{ asset('images/intervenants/logos-entreprises/' ~ speaker.pictureCompanySpeaker) }}"
+                                          data-picture="{{ asset('images/intervenants/jury/jury-profil/' ~ speaker.pictureSpeaker) }}"
+                                      />
+                                    <div class="overlay-jury-event-home"></div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="event-home-container-2">
+      <div class="button-and-program">
+        <div class="btn-event-home">
+          {% set userCount = firstEvent.userEvents|length %}
+
+          {% if userCount > 0 %}
+            <button id="toggle-participants-btn-{{ firstEvent.id }}" class="number-btn-event-home">
+              <i class="bi bi-person-fill-check"></i>
+              {% if eventIsArchived %}
+                {% if userCount == 1 %}
+                  1 personne était inscrite
+                {% else %}
+                  {{ userCount }} personnes étaient inscrites
+                {% endif %}
+              {% else %}
+                {% if userCount == 1 %}
+                  1 personne est déjà inscrite
+                {% else %}
+                  {{ userCount }} personnes sont déjà inscrites
+                {% endif %}
+              {% endif %}
+            </button>
+          {% endif %}
+
+          {% if not eventIsArchived %}
+            {% set isRegistered = false %}
+            {% if app.user %}
+              {% for userEvent in firstEvent.userEvents %}
+                {% if userEvent.user.id == app.user.id %}
+                  {% set isRegistered = true %}
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+
+            {% if app.user %}
+              {% if isRegistered %}
+                <form method="POST" onsubmit="return false;">
+                  <input type="hidden" name="_token" value="{{ csrf_token('event_unregister') }}">
+                  <button type="submit" class="cancelation-inscription-event-btn-home">
+                    <i class="bi bi-person-dash-fill"></i> ANNULER L'INSCRIPTION
+                  </button>
+                </form>
+              {% else %}
+                <form method="POST" onsubmit="return false;">
+                  <input type="hidden" name="_token" value="{{ csrf_token('event_register') }}">
+                  <button type="submit" class="inscription-event-btn-home">
+                    <i class="bi bi-person-fill-add"></i> S’INSCRIRE À L’ÉVÉNEMENT
+                  </button>
+                </form>
+              {% endif %}
+            {% else %}
+              <a href="#" class="inscription-event-btn-home force-register">
+                <i class="bi bi-person-fill-add"></i> S’INSCRIRE À L’ÉVÉNEMENT
+              </a>
+            {% endif %}
+          {% endif %}
+        </div>
+
+          <script id="event-data" data-current="{{ firstEvent.id }}">[{{ allEventIds | join(',') }}]</script>
+          <script id="csrf-data" data-register="{{ csrf_token('event_register') }}" data-unregister="{{ csrf_token('event_unregister') }}"></script>
+          <script>
+            const routeEventRegister = "{{ path('event_register', {id: firstEvent.id}) }}";
+            const routeUnregister = "{{ path('event_unregister', {id: firstEvent.id}) }}";
+            const routeRegister = "{{ path('app_register') }}";
+  
+            const csrfData = document.getElementById('csrf-data');
+            const csrfRegister = csrfData?.dataset.register;
+            const csrfUnregister = csrfData?.dataset.unregister;
+          </script>
+
+        <div class="event-subtitle-home">
+          <h3>
+            <i class="bi bi-calendar-event"></i> PROGRAMME:
+          </h3>
+          <ul>
+            {% for line in firstEvent.programEvent|split('\n') %}
+              <li>{{ line|raw }}</li>
+            {% endfor %}
+          </ul>
+          <h3>
+          <a href="https://www.google.com/maps?q={{ (firstEvent.location.streetLocation ~ ' ' ~ firstEvent.location.postalCode ~ ' ' ~ firstEvent.location.cityLocation)|url_encode }}" target="_blank"><i class="bi bi-crosshair icon-maps"></i></a> LIEU:
+          </h3>
+          <a href="https://www.google.com/maps?q={{ (firstEvent.location.streetLocation ~ ' ' ~ firstEvent.location.postalCode ~ ' ' ~ firstEvent.location.cityLocation)|url_encode }}" target="_blank">
+          <p>
+            {{ firstEvent.location.streetLocation|raw }}, {{ firstEvent.location.postalCode|raw }} {{ firstEvent.location.cityLocation|raw }}
+          </p>
+          </a>
+        </div>
+      </div>
+
+      {% if firstEvent.typeEvent == 'Network' %}
+        {% set producedFilms = firstEvent.shortFilms|filter(f => f.statutShortFilm == 'Produit') %}
+
+        {% if producedFilms|length > 0 or firstEvent.shortFilmProposal %}
+          <div class="screening-of-selected-short-films-event">
+            {% if producedFilms|length > 0 %}
+              <h2>
+                PROJECTION DE <span class="event-title-home-color">COURTS MÉTRAGES</span> SÉLECTIONNÉS
+              </h2>
+            {% endif %}
+            <div class="short-films-container-event">
+              <div class="short-films-slider-wrapper">
+                <div class="short-films-slider-track" id="short-films-slider-track" data-id="{{ firstEvent.id }}">
+
+                  {% for shortFilm in producedFilms %}
+                    <div class="img-short-films">
+                      <div class="span-short-films-display-event">
+                        <span>{{ shortFilm.genreShortFilm }}</span>
+                        <span>{{ shortFilm.durationShortFilm }}</span>
+                      </div>
+                    {% set speaker = shortFilm.speakers is not empty ? shortFilm.speakers|first : null %}
+                    <img 
+                        src="{{ 'images/courts-metrages/' ~ shortFilm.posterShortFilm }}" 
+                        alt="Affiche du cours métrage {{ shortFilm.titleShortFilm }} présenté par {{ speaker.firstnameSpeaker }} {{ speaker.lastNameSpeaker }}"
+                        data-img-pop-up="{{ 'images/courts-metrages/courts-metrages-pop-up/' ~ shortFilm.posterPopUpShortFilm }}"
+                        data-duration="{{ shortFilm.durationShortFilm }}"
+                        data-genre="{{ shortFilm.genreShortFilm }}"
+                        data-title="{{ shortFilm.titleShortFilm }}"
+                        data-production="{{ shortFilm.productionShortFilm }}"
+                        data-pitch="{{ shortFilm.pitchShortFilm }}"
+                        {% if shortFilm.speakers is not empty %}
+                            {% set speaker = shortFilm.speakers|first %}
+                            data-news="{{ speaker.newsSpeaker }}"
+                            data-bio="{{ speaker.biographySpeaker|e('html_attr') }}"
+                            data-picture="{{ 'images/intervenants/realisateur-et-stagiaire/realisateur-et-stagiaire-profil/' ~ speaker.pictureSpeaker }}"
+                            data-name="{{ speaker.firstNameSpeaker }} {{ speaker.lastNameSpeaker }}"
+                            data-role="{{ speaker.roleSpeaker }}"
+                            data-search="{{ speaker.search }}"
+                            data-company="{{ 'images/intervenants/logos-entreprises/' ~ speaker.pictureCompanySpeaker }}"
+                            data-imp-pop-up="{{ 'images/intervenants/realisateur-et-stagiaire/realisateur-et-stagiaire-pop-up/' ~ speaker.imgPopUpSpeaker }}"
+                        {% endif %}
+                        loading="lazy"
+                    />
+                      <div class="overlay-short-films-event-home"></div>
+                    </div>
+                  {% endfor %}
+
+                  {% if firstEvent.shortFilmProposal and producedFilms|length < 5 %}
+                    {% set emptySlots = 5 - producedFilms|length %}
+                    {% for i in 1..emptySlots %}
+                      <div class="img-short-films img-short-films-proposal">
+                        <img src="{{ asset('images/images-necessaire-au-site/fond-noir.png') }}"
+                          alt="Ajouter un court métrage"
+                          data-placeholder="true"
+                          data-open-popup="shortfilm" />
+                        <div class="suggest-short-film-content">
+                          <div class="plus-icon-circle"><i class="bi bi-plus"></i></div>
+                          <p>Proposez votre court-métrage</p>
+                        </div>
+                        <div class="overlay-short-films-event-home"></div>
+                      </div>
+                    {% endfor %}
+                  {% endif %}
+
+                  {% if firstEvent.shortFilmProposal and producedFilms|length >= 5 %}
+                    <div class="img-short-films img-short-films-proposal">
+                    <img src="{{ 'images/images-necessaire-au-site/fond-noir.png' }}"
+                        alt="Ajouter un court métrage"
+                        data-placeholder="true"
+                        data-open-popup="shortfilm"
+                        loading="lazy" />
+                      <div class="suggest-short-film-content">
+                        <div class="plus-icon-circle"><i class="bi bi-plus"></i></div>
+                        <p>Proposez votre court-métrage</p>
+                      </div>
+                      <div class="overlay-short-films-event-home"></div>
+                    </div>
+                  {% endif %}
+
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
+      {% elseif firstEvent.typeEvent == 'Location Network' %}
+        {% set producedFilms = firstEvent.shortFilms|filter(f => f.statutShortFilm == 'Produit') %}
+
+        {% if producedFilms|length > 0 or firstEvent.shortFilmProposal %}
+          <div class="screening-of-selected-short-films-event">
+            {% if producedFilms|length > 0 %}
+              <h2>
+                PROJECTION DE <span class="event-title-home-color">COURTS MÉTRAGES</span> SÉLECTIONNÉS
+              </h2>
+            {% endif %}
+            <div class="short-films-container-event">
+              <div class="short-films-slider-wrapper">
+                <div class="short-films-slider-track" id="short-films-slider-track" data-id="{{ firstEvent.id }}">
+
+                  {% for shortFilm in producedFilms %}
+                    <div class="img-short-films">
+                      <div class="span-short-films-display-event">
+                        <span>{{ shortFilm.genreShortFilm }}</span>
+                        <span>{{ shortFilm.durationShortFilm }}</span>
+                      </div>
+                    {% set speaker = shortFilm.speakers is not empty ? shortFilm.speakers|first : null %}
+                    <img 
+                        src="{{ 'images/courts-metrages/' ~ shortFilm.posterShortFilm }}" 
+                        alt="Affiche du cours métrage {{ shortFilm.titleShortFilm }} présenté par {{ speaker.firstnameSpeaker }} {{ speaker.lastNameSpeaker }}"
+                        data-img-pop-up="{{ 'images/courts-metrages/courts-metrages-pop-up/' ~ shortFilm.posterPopUpShortFilm }}"
+                        data-duration="{{ shortFilm.durationShortFilm }}"
+                        data-genre="{{ shortFilm.genreShortFilm }}"
+                        data-title="{{ shortFilm.titleShortFilm }}"
+                        data-production="{{ shortFilm.productionShortFilm }}"
+                        data-pitch="{{ shortFilm.pitchShortFilm }}"
+                        {% if shortFilm.speakers is not empty %}
+                            {% set speaker = shortFilm.speakers|first %}
+                            data-news="{{ speaker.newsSpeaker }}"
+                            data-bio="{{ speaker.biographySpeaker|e('html_attr') }}"
+                            data-picture="{{ 'images/intervenants/realisateur-et-stagiaire/realisateur-et-stagiaire-profil/' ~ speaker.pictureSpeaker }}"
+                            data-name="{{ speaker.firstNameSpeaker }} {{ speaker.lastNameSpeaker }}"
+                            data-role="{{ speaker.roleSpeaker }}"
+                            data-search="{{ speaker.search }}"
+                            data-company="{{ 'images/intervenants/logos-entreprises/' ~ speaker.pictureCompanySpeaker }}"
+                            data-imp-pop-up="{{ 'images/intervenants/realisateur-et-stagiaire/realisateur-et-stagiaire-pop-up/' ~ speaker.imgPopUpSpeaker }}"
+                        {% endif %}
+                        loading="lazy"
+                    />
+                      <div class="overlay-short-films-event-home"></div>
+                    </div>
+                  {% endfor %}
+
+                  {% if firstEvent.shortFilmProposal and producedFilms|length < 5 %}
+                    {% set emptySlots = 5 - producedFilms|length %}
+                    {% for i in 1..emptySlots %}
+                      <div class="img-short-films img-short-films-proposal">
+                    <img src="{{ 'images/images-necessaire-au-site/fond-noir.png' }}"
+                        alt="Ajouter un court métrage"
+                        data-placeholder="true"
+                        data-open-popup="shortfilm"
+                        loading="lazy" />
+                        <div class="suggest-short-film-content">
+                          <div class="plus-icon-circle"><i class="bi bi-plus"></i></div>
+                          <p>Proposez votre court-métrage</p>
+                        </div>
+                        <div class="overlay-short-films-event-home"></div>
+                      </div>
+                    {% endfor %}
+                  {% endif %}
+
+                  {% if firstEvent.shortFilmProposal and producedFilms|length >= 5 %}
+                    <div class="img-short-films img-short-films-proposal">
+                  <img src="{{ 'images/images-necessaire-au-site/fond-noir.png' }}"
+                      alt="Ajouter un court métrage"
+                      data-placeholder="true"
+                      data-open-popup="shortfilm"
+                      loading="lazy" />
+                      <div class="suggest-short-film-content">
+                        <div class="plus-icon-circle"><i class="bi bi-plus"></i></div>
+                        <p>Proposez votre court-métrage</p>
+                      </div>
+                      <div class="overlay-short-films-event-home"></div>
+                    </div>
+                  {% endif %}
+
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
+        {% elseif firstEvent.typeEvent == 'Net Pitch' %}
+          {% set financerFilms = firstEvent.shortFilms|filter(f => f.statutShortFilm == 'À financer') %}
+          {% if financerFilms|length > 0 %}
+            <div class="screening-of-selected-short-films-event">
+              <h2 class="title-event-home-proposition">
+                PROPOSITIONS DE PROJETS DES <span class="event-title-home-color">AUTEURS-RÉALISATEURS</span>
+              </h2>
+              <div class="short-films-container-event">
+                <div class="short-films-slider-wrapper">
+                  <div class="short-films-slider-track" id="short-films-slider-track" data-id="{{ firstEvent.id }}">
+                    {% for shortFilm in financerFilms %}
+                      <div class="img-short-films">
+                        <div class="span-short-films-display-event">
+                          {% if shortFilm.speakers is not empty %}
+                            {% set speaker = shortFilm.speakers|first %}
+                            <span>{{ speaker.firstNameSpeaker }} {{ speaker.lastNameSpeaker }}</span>
+                          {% endif %}
+                        </div>
+                        {% if shortFilm.speakers is not empty %}
+                          {% set speaker = shortFilm.speakers|first %}
+                          <img 
+                            src="{{ 'images/intervenants/realisateur-et-stagiaire/realisateur-et-stagiaire-profil/' ~ speaker.pictureSpeaker }}"
+                            alt="Photo de {{ speaker.firstNameSpeaker }} {{ speaker.lastNameSpeaker }} qui doit présenter le court métrage {{ shortFilm.titleShortFilm }}"
+                            data-img-pop-up="{{ 'images/courts-metrages/courts-metrages-pop-up/' ~ shortFilm.posterPopUpShortFilm }}"
+                            data-duration="{{ shortFilm.durationShortFilm }}"
+                            data-genre="{{ shortFilm.genreShortFilm }}"
+                            data-title="{{ shortFilm.titleShortFilm }}"
+                            data-production="{{ shortFilm.productionShortFilm }}"
+                            data-pitch="{{ shortFilm.pitchShortFilm }}"
+                            data-news="{{ speaker.newsSpeaker }}"
+                            data-search="{{ speaker.search }}"
+                            data-bio="{{ speaker.biographySpeaker|e('html_attr') }}"
+                            data-picture="{{ 'images/intervenants/realisateur-et-stagiaire/realisateur-et-stagiaire-profil/' ~ speaker.pictureSpeaker }}"
+                            data-name="{{ speaker.firstNameSpeaker }} {{ speaker.lastNameSpeaker }}"
+                            data-role="{{ speaker.roleSpeaker }}"
+                            data-company="{{ 'images/intervenants/logos-entreprises/' ~ speaker.pictureCompanySpeaker }}"
+                            data-imp-pop-up="{{ 'images/intervenants/realisateur-et-stagiaire/realisateur-et-stagiaire-pop-up/' ~ speaker.imgPopUpSpeaker }}"
+                            loading="lazy"
+                          />
+                        {% endif %}
+                        <div class="overlay-short-films-event-home"></div>
+                      </div>
+                    {% endfor %}
+                    {% if firstEvent.shortFilmProposal and financerFilms|length < 5 %}
+                      {% set emptySlots = 5 - financerFilms|length %}
+                      {% for i in 1..emptySlots %}
+                        <div class="img-short-films img-short-films-proposal">
+                      <img src="{{ 'images/images-necessaire-au-site/fond-noir.png' }}"
+                          alt="Ajouter un court métrage"
+                          data-placeholder="true"
+                          data-open-popup="shortfilm"
+                          loading="lazy" />
+                          <div class="suggest-short-film-content">
+                            <div class="plus-icon-circle"><i class="bi bi-plus"></i></div>
+                            <p>Proposez votre court-métrage</p>
+                          </div>
+                          <div class="overlay-short-films-event-home"></div>
+                        </div>
+                      {% endfor %}
+                    {% endif %}
+
+                    {% if firstEvent.shortFilmProposal and financerFilms|length >= 5 %}
+                      <div class="img-short-films img-short-films-proposal">
+                      <img src="{{ 'images/images-necessaire-au-site/fond-noir.png' }}"
+                          alt="Ajouter un court métrage"
+                          data-placeholder="true"
+                          data-open-popup="shortfilm"
+                          loading="lazy" />
+                        <div class="suggest-short-film-content">
+                          <div class="plus-icon-circle"><i class="bi bi-plus"></i></div>
+                          <p>Proposez votre court-métrage</p>
+                        </div>
+                        <div class="overlay-short-films-event-home"></div>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+        {% elseif firstEvent.typeEvent == 'Location Net Pitch' %}
+          {% set financerFilms = firstEvent.shortFilms|filter(f => f.statutShortFilm == 'À financer') %}
+          {% if financerFilms|length > 0 %}
+            <div class="screening-of-selected-short-films-event">
+              <h2 class="title-event-home-proposition">
+                PROPOSITIONS DE PROJETS DES <span class="event-title-home-color">AUTEURS-RÉALISATEURS</span>
+              </h2>
+              <div class="short-films-container-event">
+                <div class="short-films-slider-wrapper">
+                  <div class="short-films-slider-track" id="short-films-slider-track" data-id="{{ firstEvent.id }}">
+                    {% for shortFilm in financerFilms %}
+                      <div class="img-short-films">
+                        <div class="span-short-films-display-event">
+                          {% if shortFilm.speakers is not empty %}
+                            {% set speaker = shortFilm.speakers|first %}
+                            <span>{{ speaker.firstNameSpeaker }} {{ speaker.lastNameSpeaker }}</span>
+                          {% endif %}
+                        </div>
+                        {% if shortFilm.speakers is not empty %}
+                          {% set speaker = shortFilm.speakers|first %}
+                         <img 
+                            src="{{ 'images/intervenants/realisateur-et-stagiaire/realisateur-et-stagiaire-profil/' ~ speaker.pictureSpeaker }}"
+                            alt="Photo de {{ speaker.firstNameSpeaker }} {{ speaker.lastNameSpeaker }} qui doit présenter le court métrage {{ shortFilm.titleShortFilm }}"
+                            data-img-pop-up="{{ 'images/courts-metrages/courts-metrages-pop-up/' ~ shortFilm.posterPopUpShortFilm }}"
+                            data-duration="{{ shortFilm.durationShortFilm }}"
+                            data-genre="{{ shortFilm.genreShortFilm }}"
+                            data-title="{{ shortFilm.titleShortFilm }}"
+                            data-production="{{ shortFilm.productionShortFilm }}"
+                            data-pitch="{{ shortFilm.pitchShortFilm }}"
+                            data-news="{{ speaker.newsSpeaker }}"
+                            data-search="{{ speaker.search }}"
+                            data-bio="{{ speaker.biographySpeaker|e('html_attr') }}"
+                            data-picture="{{ 'images/intervenants/realisateur-et-stagiaire/realisateur-et-stagiaire-profil/' ~ speaker.pictureSpeaker }}"
+                            data-name="{{ speaker.firstNameSpeaker }} {{ speaker.lastNameSpeaker }}"
+                            data-role="{{ speaker.roleSpeaker }}"
+                            data-company="{{ 'images/intervenants/logos-entreprises/' ~ speaker.pictureCompanySpeaker }}"
+                            data-imp-pop-up="{{ 'images/intervenants/realisateur-et-stagiaire/realisateur-et-stagiaire-pop-up/' ~ speaker.imgPopUpSpeaker }}"
+                            loading="lazy"
+                          />
+                        {% endif %}
+                        <div class="overlay-short-films-event-home"></div>
+                      </div>
+                    {% endfor %}
+                    {% if firstEvent.shortFilmProposal and financerFilms|length < 5 %}
+                      {% set emptySlots = 5 - financerFilms|length %}
+                      {% for i in 1..emptySlots %}
+                        <div class="img-short-films img-short-films-proposal">
+                        <img src="{{ 'images/images-necessaire-au-site/fond-noir.png' }}"
+                            alt="Ajouter un court métrage"
+                            data-placeholder="true"
+                            data-open-popup="shortfilm"
+                            loading="lazy" />
+                          <div class="suggest-short-film-content">
+                            <div class="plus-icon-circle"><i class="bi bi-plus"></i></div>
+                            <p>Proposez votre court-métrage</p>
+                          </div>
+                          <div class="overlay-short-films-event-home"></div>
+                        </div>
+                      {% endfor %}
+                    {% endif %}
+                    {% if firstEvent.shortFilmProposal and financerFilms|length >= 5 %}
+                      <div class="img-short-films img-short-films-proposal">
+                      <img src="{{ 'images/images-necessaire-au-site/fond-noir.png' }}"
+                          alt="Ajouter un court métrage"
+                          data-placeholder="true"
+                          data-open-popup="shortfilm"
+                          loading="lazy" />
+                        <div class="suggest-short-film-content">
+                          <div class="plus-icon-circle"><i class="bi bi-plus"></i></div>
+                          <p>Proposez votre court-métrage</p>
+                        </div>
+                        <div class="overlay-short-films-event-home"></div>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+<script id="global-config" 
+  data-replacement-user-img="{{ asset('images/general/images-des-formulaires/' ~ generalCineNetwork.replacementImage) }}">
+</script>

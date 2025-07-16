@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block meta_description %}{% endblock %}
+    {% block meta %}{% endblock %}
+    <title>
+      {% block title %}
+        La Ciné Net Work
+      {% endblock %}
+    </title>
+    <link rel="icon" type="image/png" href="{{ asset('images/images-necessaire-au-site/favicon-la-cine-network.png') }}"/>
+    {% block stylesheets %}
+      {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+    {% block javascripts %}
+      {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+  </head>
+  <body{% if app.user %} data-user-id="{{ app.user.id }}"{% endif %}>
+    {{ render(controller('App\\Controller\\NavbarController::renderNavbar')) }}
+    {% block body %}
+    {% endblock %}
+    {{ render(controller('App\\Controller\\FooterController::renderFooter')) }}
+  </body>

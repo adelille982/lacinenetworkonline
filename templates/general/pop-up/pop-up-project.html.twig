@@ -1,0 +1,137 @@
+<div class="overlay-pop-up-project-shortfilm hidden-pop-up-project-shortfilm">
+  <div class="content-pop-up-project-shortfilm">
+    <i class="bi bi-x-circle close-pop-up-project-shortfilm"></i>
+    <h2 class="title-pop-up-shortfilm">Proposez votre court-métrage</h2>
+
+			<div class="flash-container-proposal-short-film">
+			{% for message in all_flashes['error_proposal_short_film'] ?? [] %}
+				<div class="flash-message-error-proposal-short-film">{{ message }}</div>
+			{% endfor %}
+			{% for message in all_flashes['success_proposal_short_film'] ?? [] %}
+				<div class="flash-message-success-proposal-short-film">{{ message }}</div>
+			{% endfor %}
+			</div>
+
+    <form method="post" enctype="multipart/form-data">
+      <div class="form-columns-pop-up-shortfilm">
+
+        <div class="form-column-pop-up-shortfilm">
+          <fieldset class="fieldset-pop-up-shortfilm">
+            <legend class="legend-pop-up-shortfilm">Profil</legend>
+
+            <label class="label-pop-up-shortfilm" for="speakerFirstname">Prénom *</label>
+            <input class="input-pop-up-shortfilm" type="text" id="speakerFirstname" name="speakerFirstname" placeholder="Prénom" required>
+
+            <label class="label-pop-up-shortfilm" for="speakerLastname">Nom *</label>
+            <input class="input-pop-up-shortfilm" type="text" id="speakerLastname" name="speakerLastname" placeholder="Nom" required>
+
+            <label class="label-pop-up-shortfilm" for="speakerTelephone">Téléphone *</label>
+            <input class="input-pop-up-shortfilm" type="text" id="speakerTelephone" name="speakertelephone" placeholder="Téléphone" required>
+
+            <label class="label-pop-up-shortfilm" for="speakerEmail">Email *</label>
+            <input class="input-pop-up-shortfilm" type="text" id="speakerEmail" name="speakerEmail" placeholder="Email" required>
+
+            <label class="label-pop-up-shortfilm" for="speakerBiography">Biographie *</label>
+            <textarea class="textarea-pop-up-shortfilm" id="speakerBiography" name="speakerBiography" placeholder="Votre biographie" rows="4" required></textarea>
+
+            <label class="label-pop-up-shortfilm" for="speakerInstagram">Instagram (optionnel)</label>
+            <input class="input-pop-up-shortfilm" type="text" id="speakerInstagram" name="speakerInstagram" placeholder="Lien Instagram">
+
+            <label class="label-pop-up-shortfilm" for="speakerFacebook">Facebook (optionnel)</label>
+            <input class="input-pop-up-shortfilm" type="text" id="speakerFacebook" name="speakerFacebook" placeholder="Lien Facebook">
+
+            <label class="label-pop-up-shortfilm" for="speakerSearch">Appel & Besoins</label>
+            <textarea class="textarea-pop-up-shortfilm" id="speakerSearch" name="speakerSearch" placeholder="Ex : financements, productions..." rows="2"></textarea>
+
+            <label class="label-pop-up-shortfilm" for="speakerNews">Actualités (optionnel)</label>
+            <textarea class="textarea-pop-up-shortfilm" id="speakerNews" name="speakerNews" placeholder="Actualités récentes à propos de vos projets" rows="2"></textarea>
+          </fieldset>
+
+          <fieldset class="fieldset-pop-up-shortfilm">
+            <legend class="legend-pop-up-shortfilm">Photos du profil</legend>
+
+            <label class="label-pop-up-shortfilm" for="speakerProfilePicture">Photo de profil *</label>
+            <input class="input-pop-up-shortfilm" type="file" id="speakerProfilePicture" name="speakerProfilePicture" accept="image/*" required>
+
+            <label class="label-pop-up-shortfilm" for="speakerPopupPicture">Image pour la pop-up *</label>
+            <input class="input-pop-up-shortfilm" type="file" id="speakerPopupPicture" name="speakerPopupPicture" accept="image/*" required>
+
+            <label class="label-pop-up-shortfilm">Images complémentaires</label>
+            <input class="input-pop-up-shortfilm" type="file" name="speakerImg1" accept="image/*">
+            <input class="input-pop-up-shortfilm" type="file" name="speakerImg2" accept="image/*">
+            <input class="input-pop-up-shortfilm" type="file" name="speakerImg3" accept="image/*">
+
+            <label class="label-pop-up-shortfilm" for="speakerCompanyLogo">Logo de votre société/structure (optionnel)</label>
+            <input class="input-pop-up-shortfilm" type="file" id="speakerCompanyLogo" name="speakerCompanyLogo" accept="image/*">
+          </fieldset>
+        </div>
+
+        <div class="form-column-pop-up-shortfilm">
+          <fieldset class="fieldset-pop-up-shortfilm">
+            <legend class="legend-pop-up-shortfilm">À propos du court-métrage</legend>
+
+            <label class="label-pop-up-shortfilm" for="titleShortFilmProposal">Titre du film *</label>
+            <input class="input-pop-up-shortfilm" type="text" id="titleShortFilmProposal" name="titleShortFilmProposal" placeholder="Titre du film" required>
+
+            <label class="label-pop-up-shortfilm" for="durationShortFilmProposal">Durée *</label>
+            <input class="input-pop-up-shortfilm" type="text" id="durationShortFilmProposal" name="durationShortFilmProposal" placeholder="Durée (ex : 12min)" required>
+
+            <label class="label-pop-up-shortfilm" for="genreShortFilmProposal">Genre *</label>
+            <input class="input-pop-up-shortfilm" type="text" id="genreShortFilmProposal" name="genreShortFilmProposal" placeholder="Genre" required>
+
+            <label class="label-pop-up-shortfilm" for="productionShortFilmProposal">Production *</label>
+            <input class="input-pop-up-shortfilm" type="text" id="productionShortFilmProposal" name="productionShortFilmProposal" placeholder="Production" required>
+
+            <label class="label-pop-up-shortfilm" for="pitchShortFilmProposal">Pitch *</label>
+            <textarea class="textarea-pop-up-shortfilm" id="pitchShortFilmProposal" name="pitchShortFilmProposal" placeholder="Pitch du film" rows="4" required></textarea>
+          </fieldset>
+
+          <fieldset class="fieldset-pop-up-shortfilm">
+            <legend class="legend-pop-up-shortfilm">Visuels du court-métrage</legend>
+
+            <label class="label-pop-up-shortfilm" for="posterShortFilmProposal">Affiche du film *</label>
+            <input class="input-pop-up-shortfilm" type="file" id="posterShortFilmProposal" name="posterShortFilmProposal" accept="image/*" required>
+
+            <label class="label-pop-up-shortfilm" for="posterPopUpShortFilmProposal">Image pop-up *</label>
+            <input class="input-pop-up-shortfilm" type="file" id="posterPopUpShortFilmProposal" name="posterPopUpShortFilmProposal" accept="image/*" required>
+
+            <label class="label-pop-up-shortfilm">Images complémentaires</label>
+            <input class="input-pop-up-shortfilm" type="file" name="imgShortFilmProposal1" accept="image/*">
+            <input class="input-pop-up-shortfilm" type="file" name="imgShortFilmProposal2" accept="image/*">
+            <input class="input-pop-up-shortfilm" type="file" name="imgShortFilmProposal3" accept="image/*">
+            <input class="input-pop-up-shortfilm" type="file" name="imgShortFilmProposal4" accept="image/*">
+            <input class="input-pop-up-shortfilm" type="file" name="imgShortFilmProposal5" accept="image/*">
+          </fieldset>
+
+          <fieldset class="fieldset-pop-up-shortfilm">
+            <legend class="legend-pop-up-shortfilm">Liens & format</legend>
+
+            <label class="label-pop-up-shortfilm" for="linkShortFilm">Lien du film (Pas de Wetransfert)</label>
+            <input class="input-pop-up-shortfilm" type="url" id="linkShortFilm" name="linkShortFilm" placeholder="Lien du film">
+
+            <label class="label-pop-up-shortfilm" for="trailerShortFilm">Lien de la bande-annonce (optionnel)</label>
+            <input class="input-pop-up-shortfilm" type="url" id="trailerShortFilm" name="trailerShortFilm" placeholder="Lien bande-annonce">
+
+            <label class="label-pop-up-shortfilm" for="formatDCPProposal">Le film est-il au format DCP ?</label>
+            <select class="select-pop-up-shortfilm" id="formatDCPProposal" name="formatDCPProposal" required>
+              <option value="" disabled selected>Sélectionnez une option</option>
+              <option value="1">Oui</option>
+              <option value="0">Non</option>
+            </select>
+          </fieldset>
+        </div>
+      </div>
+
+      <div class="consent-container-pop-up-shortfilm">
+        <input class="checkbox-pop-up-shortfilm" type="checkbox" id="acceptTermsShortFilm" name="acceptTermsShortFilm" required>
+        <label class="label-pop-up-shortfilm" for="acceptTermsShortFilm">
+          J’accepte les <a href="{{ path('app_rgpd') }}" target="_blank">conditions générales d’utilisation</a>.
+        </label>
+      </div>
+
+      <button type="submit" class="submit-shortfilm-proposal" name="submit-shortfilm-proposal">
+        Envoyer la proposition
+      </button>
+    </form>
+  </div>
+</div>

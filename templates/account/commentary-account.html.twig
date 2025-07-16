@@ -1,0 +1,152 @@
+<div style="text-align: center;">
+  <h2 class="main-title-comment-account" id="vos-commentaires">VOS COMMENTAIRES</h2>
+</div>
+    <div class="flash-container-comment-account">
+      {% for message in all_flashes['danger_comment_account'] ?? [] %}
+          <div class="flash-message-error-comment-account">{{ message }}</div>
+      {% endfor %}
+      {% for message in all_flashes['success_comment_account'] ?? [] %}
+          <div class="flash-message-success-comment-account">{{ message }}</div>
+      {% endfor %}
+    </div>
+<section class="block-comment-account">
+
+  <div class="comment-account-section">
+    <h3 class="title-comment-account">ÉVÉNEMENT</h3>
+
+    {% if userCommentariesEvents is not empty %}
+      <div class="comment-account-slider-wrapper">
+        <div id="comment-account-slider-track">
+          {% for commentary in userCommentariesEvents %}
+            <div class="comment-account-user-block event">
+              <div class="comment-account-user-container">
+                {% if userCommentariesEvents|length > 1 %}
+                  <i class="bi bi-arrow-left-circle chevron-comment-card-left event"></i>
+                {% endif %}
+
+                <div class="logo-comment-account">
+                  <img src="{{ 'images/images-necessaire-au-site/logo-cinenetwork-transparent.png' | imagine_filter('thumbnail_small') }}"
+                      alt="Logo Cinenetwork"
+                      loading="lazy" />
+                </div>
+
+                <div class="comment-account-user-content">
+                  <div class="profile-comment-account">
+                    {% if commentary.user.pictureUser %}
+                      <img src="{{ ('images/photos-des-utilisateurs/' ~ commentary.user.pictureUser) | imagine_filter('thumbnail_large') }}"
+                          alt="Photo de de l'utilisateur qui a laissé le commentaire"
+                          loading="lazy" />
+                    {% else %}
+                      <img src="{{ 'images/images-necessaire-au-site/logo-la-cine-network-retrecit.png' | imagine_filter('thumbnail_large') }}"
+                          alt="Photo de de l'utilisateur par défault qui a laissé le commentaire"
+                          loading="lazy" />
+                    {% endif %}
+                    <span>{{ commentary.user.firstnameUser ~ ' ' ~ commentary.user.lastnameUser|first|upper ~ '.' }}</span>
+                  </div>
+                  <div class="comment-account-user-locality">
+                    <div class="span-comment-user-account">
+                      {% if commentary.netPitchFormation %}
+                        <p>{{ commentary.netPitchFormation.titleNetPitchFormation }}</p>
+                      {% elseif commentary.archivedEvent %}
+                        <p>{{ commentary.archivedEvent.event.titleEvent }}</p>
+                      {% else %}
+                        <p>Contenu non lié</p>
+                      {% endif %}
+                    </div>
+                    <div class="text-comment-user-account">
+                      <p>{{ commentary.textCommentary }}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {% if userCommentariesEvents|length > 1 %}
+                  <i class="bi bi-arrow-right-circle chevron-comment-card-right event"></i>
+                {% endif %}
+              </div>
+
+              <div class="comment-account-actions">
+                  <form method="post" action="{{ path('commentary_delete', {'id': commentary.id}) }}"
+                        onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');"
+                        style="width: 100%;">
+                      <input type="hidden" name="_token" value="{{ csrf_token('delete_commentary_' ~ commentary.id) }}">
+                      <button type="submit" class="btn-comment-delete" style="width: 100%;">Supprimer</button>
+                  </form>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% else %}
+      <div class="no-event-account">Vous n'avez pas encore commenté d'événement.</div>
+    {% endif %}
+  </div>
+
+  {% if userCommentariesFormations|length > 0 %}
+  <div class="comment-account-divider"></div>
+  {% endif %}
+
+  <div class="comment-account-section">
+    <h3 class="title-comment-account">FORMATION</h3>
+
+    {% if userCommentariesFormations is not empty %}
+      <div class="comment-account-slider-wrapper">
+        <div id="comment-account-slider-track">
+          {% for commentary in userCommentariesFormations %}
+            <div class="comment-account-user-block formation">
+              <div class="comment-account-user-container">
+                {% if userCommentariesFormations|length > 1 %}
+                  <i class="bi bi-arrow-left-circle chevron-comment-card-left formation"></i>
+                {% endif %}
+
+                <div class="logo-comment-account">
+                  <img src="{{ asset('images/images-necessaire-au-site/logo-cinenetwork-transparent.png') }}" alt="Logo Comment" />
+                </div>
+
+                <div class="comment-account-user-content">
+                  <div class="profile-comment-account">
+                    {% if commentary.user.pictureUser %}
+                      <img src="{{ asset(commentary.user.pictureUser) }}" alt="Photo de {{ commentary.user.firstnameUser }}" />
+                    {% else %}
+                      <img src="{{ asset('images/images-necessaire-au-site/logo-la-cine-network-retrecit.png') }}" alt="Profil par défaut" />
+                    {% endif %}
+                    <span>{{ commentary.user.firstnameUser ~ ' ' ~ commentary.user.lastnameUser|first|upper ~ '.' }}</span>
+                  </div>
+                  <div class="comment-account-user-locality">
+                    <div class="span-comment-user-account">
+                      {% if commentary.netPitchFormation %}
+                        <p>{{ commentary.netPitchFormation.titleNetPitchFormation }}</p>
+                      {% elseif commentary.archivedEvent %}
+                        <p>{{ commentary.archivedEvent.event.titleEvent }}</p>
+                      {% else %}
+                        <p>Contenu non lié</p>
+                      {% endif %}
+                    </div>
+                    <div class="text-comment-user-account">
+                      <p>{{ commentary.textCommentary }}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {% if userCommentariesFormations|length > 1 %}
+                  <i class="bi bi-arrow-right-circle chevron-comment-card-right formation"></i>
+                {% endif %}
+              </div>
+
+              <div class="comment-account-actions">
+                  <form method="post" action="{{ path('commentary_delete', {'id': commentary.id}) }}"
+                        onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');"
+                        style="width: 100%;">
+                      <input type="hidden" name="_token" value="{{ csrf_token('delete_commentary_' ~ commentary.id) }}">
+                      <button type="submit" class="btn-comment-delete" style="width: 100%;">Supprimer</button>
+                  </form>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% else %}
+      <div class="no-event-account">Vous n'avez pas encore commenté de formation.</div>
+    {% endif %}
+  </div>
+
+</section>

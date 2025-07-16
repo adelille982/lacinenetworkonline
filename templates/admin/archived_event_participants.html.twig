@@ -1,0 +1,33 @@
+<style>
+
+.participants-list-static h4 {
+    margin: 0 0 8px 0;
+    color: white;
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.participants-list-static ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin: 0;
+}
+
+.participants-list-static li {
+    margin-bottom: 4px;
+}
+
+.participants-list-static a {
+    color: #2185d0;
+    text-decoration: none;
+}
+
+.participants-list-static a:hover {
+    text-decoration: underline;
+}
+</style>
+
+<div class="participants-list-static">
+    <h4>Participants inscrits</h4>
+    {{ field.value.getParticipantsAsHtmlList()|raw }}
+</div>

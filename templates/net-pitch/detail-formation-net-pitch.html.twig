@@ -1,0 +1,22 @@
+<section class="detail-formation-net-pitch-section">
+  <div class="tabs-container-netpitch">
+    
+    <div class="tabs-toggle-button">
+      <button type="button" class="toggle-option active" data-tab="description">PARTICIPANTS ET ENSEIGNEMENTS</button>
+      <button type="button" class="toggle-option" data-tab="program">PROGRAMME</button>
+    </div>
+
+    <div class="tabs-content-netpitch">
+      <div id="description" class="tab-pane-detail-formation active">
+        <div class="text-detail-formation-net-pitch">
+          {{ formation.longDescriptionNetPitchFormation|raw }}
+        </div>
+      </div>
+
+      <div id="program" class="tab-pane-detail-formation">
+        <div class="text-detail-formation-net-pitch">
+          {{ formation.programDescription|raw }}
+        </div>
+      </div>
+    </div>
+</section>

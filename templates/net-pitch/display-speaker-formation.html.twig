@@ -1,0 +1,55 @@
+{% set countFutureSessions = futureSessions|length %}
+{% if countFutureSessions > 0 %}
+<h2 class="title-speaker-formation">NOS INTERVENANTS PRÉSENTS LORS DE LA FORMATION</h2>
+
+<section class="speaker-formation-section">
+  <div class="speaker-slider-wrapper">
+    <div class="speaker-slider-track" id="slider-track">
+      {% for sessionId, speakers in sessionSpeakersMap %}
+        {% for speaker in speakers %}
+          {% if speaker.typeSpeaker == 'Formateur' %}
+            {% set cities = [] %}
+            {% for loc in speaker.locations %}
+              {% if loc.cityLocation is not empty and loc.cityLocation not in cities %}
+                {% set cities = cities|merge([loc.cityLocation]) %}
+              {% endif %}
+            {% endfor %}
+
+            <div class="speaker-formation-card" data-speaker-id="{{ speaker.id }}" data-session-id="{{ sessionId }}" style="display: none;">
+              <img 
+                src="{{ ('images/intervenants/formateur/formateur-profil/' ~ speaker.pictureSpeaker) | imagine_filter('thumbnail_large') }}"
+                alt="Photo du formateur {{ speaker.firstNameSpeaker }} {{ speaker.lastnameSpeaker }}"
+                loading="lazy"
+                class="image-speaker-formation"
+                data-img="{{ asset('images/intervenants/formateur/formateur-pop-up/' ~ speaker.imgPopUpSpeaker) }}"
+                data-name="{{ speaker.firstNameSpeaker }} {{ speaker.lastnameSpeaker }}"
+                data-role="{{ speaker.roleSpeaker }}"
+                data-bio="{{ speaker.biographySpeaker|raw }}"
+                data-company="{{ asset('images/intervenants/logos-entreprises/' ~ speaker.pictureCompanySpeaker) }}"
+                data-picture="{{ asset('images/intervenants/formateur/formateur-profil/' ~ speaker.pictureSpeaker) }}"
+                data-cities="{{ cities|join(', ')|upper }}"
+              >
+              <div class="overlay-speaker-formation"></div>
+              <div class="speaker-formation-info">
+                <div>
+                  <span class="name-speaker-formation">{{ speaker.firstNameSpeaker|upper }}</span>
+                  <span class="firstname-speaker-formation">{{ speaker.lastnameSpeaker|upper }}</span>
+                </div>
+                <div class="speaker-formation-icons">
+                  {% if speaker.instagramSpeaker %}
+                    <a href="{{ speaker.instagramSpeaker }}" target="_blank"><i class="bi bi-instagram icon-instagram-formation"></i></a>
+                  {% endif %}
+                  {% if speaker.facebookSpeaker %}
+                    <a href="{{ speaker.facebookSpeaker }}" target="_blank"><i class="bi bi-facebook icon-facebook-formation"></i></a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+

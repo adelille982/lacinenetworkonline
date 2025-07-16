@@ -1,0 +1,9 @@
+artgris_file_manager:
+    web_dir: '%kernel.project_dir%/public'
+    conf:
+        default:
+            dir: 'images'  # Répertoire relatif à public/
+            upload: true    # Active l'upload
+            view: 'thumbnail'    # Vue par défaut (list ou thumbnail)
+            service: App\Service\FileNamingService # Service de nommage des fichiers
+            show_file_count: true   # Affiche le nombre de fichiers dans les répertoires

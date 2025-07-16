@@ -1,0 +1,67 @@
+<section class="total-form-postulate-container">
+
+    <div class="img-form-postulate-container">
+    <img class="img-form-postulate" src="{{ asset('images/general/images-des-formulaires/' ~ generalCineNetwork.imgFormPostulate) | imagine_filter('fullscreen') }}" alt="Image de fond du formulaire pour postuler" loading="lazy" />
+    </div>
+
+    <div class="form-postulate-container">
+
+    <h2 class="title-form-postulate" id="postuler-chez-cine-network">POSTULER</h2>
+			<div class="flash-container-postulate">
+			{% for message in all_flashes['error_postulate'] ?? [] %}
+				<div class="flash-message-error-postulate">{{ message }}</div>
+			{% endfor %}
+			{% for message in all_flashes['success_postulate'] ?? [] %}
+				<div class="flash-message-success-postulate">{{ message }}</div>
+			{% endfor %}
+			</div>
+        <form action="" method="post" enctype="multipart/form-data" class="form-postulate">
+
+            <div class="form-postulate-content">
+                <div class="form-flex-container-postulate">
+                    <div class="form-postulate-input">
+                        <label for="last-name" class="label-form-postulate">Nom de famille: *</label>
+                        <input type="text" name="last-name-postulate" id="last-name-postulate" class="input-form-postulate" required>
+                    </div>
+                    <div class="form-postulate-input">
+                        <label for="first-name" class="label-form-postulate">Prénom: *</label>
+                        <input type="text" name="first-name-postulate" id="first-name-postulate" class="input-form-postulate" required>
+                    </div>
+                </div>
+
+                <div class="form-flex-container-postulate">
+                    <div class="form-postulate-input">
+                        <label for="email" class="label-form-postulate">Email: *</label>
+                        <input type="text" name="email-postulate" id="email-postulate" class="input-form-postulate" required>
+                    </div>
+                    <div class="form-postulate-input">
+                        <label for="phone" class="label-form-postulate">Téléphone: *</label>
+                        <input type="text" name="phone-postulate" id="phone-postulate" class="input-form-postulate" required>
+                    </div>
+                </div>
+
+                <div class="form-postulate-input">
+                    <label for="short-description" class="label-form-postulate">Décrivez nous votre expérience professionnel: *</label>
+                    <textarea name="short-description-postulate" id="short-description-postulate" class="input-form-postulate" rows="4" required></textarea>
+                </div>
+
+                <div class="form-postulate-input">
+                    <label for="cv-upload" class="label-form-postulate">Téléchargez votre CV: *</label>
+                    <input type="file" name="cv-upload-postulate" id="cv-upload-postulate" class="input-form-postulate file-input" accept=".pdf,.doc,.docx" required>
+                    <small class="file-info">Formats acceptés : PDF, DOC, DOCX.</small>
+                </div>
+
+            <div class="form-postulate-input checkbox-conditions-container">
+                <input type="checkbox" name="terms-postulate" id="terms-postulate" class="checkbox-conditions" required>
+                <label for="terms-postulate" class="label-conditions">
+                    J'accepte les <a href="{{ path('app_rgpd') }}" target="_blank">conditions générales d’utilisation</a> *
+                </label>
+            </div>
+
+                <div class="form-postulate-btn">
+                    <button type="submit" class="btn-form-postulate">ENVOYER</button>
+                </div>
+        </form>
+    </div>
+
+</section>

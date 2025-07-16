@@ -1,0 +1,10 @@
+{% extends '@EasyAdmin/crud/new.html.twig' %}
+
+{% block main %}
+    <h1>Créer un événement archivé</h1>
+
+    {{ form_start(ea.form) }}
+        {{ form_widget(ea.form) }}
+        <button class="btn btn-primary mt-3">Créer</button>
+    {{ form_end(ea.form) }}
+{% endblock %}

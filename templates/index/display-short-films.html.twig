@@ -1,0 +1,49 @@
+{% set displayedShortFilms = shortFilms
+    |filter(f => f.statutShortFilm == 'Produit' and not f.draft)
+%}
+
+{% if displayedShortFilms|length > 5 %}
+<section class="display-short-films-container">
+  <div>
+    <h2>
+      PROJECTION DE <span class="short-film-title-home-color">COURTS MÉTRAGES</span> PRÉCÉDENTS
+    </h2>
+
+    <div class="display-screening-of-selected-short-films">
+      <div class="short-films-slider-wrapper">
+        <div class="short-films-slider-track" id="past-short-films-slider-track">
+          {% for shortFilm in displayedShortFilms %}
+          <div class="display-img-short-films">
+            <div class="display-span-short-films">
+              <span>{{ shortFilm.genreShortFilm }}</span><span>{{ shortFilm.durationShortFilm }}</span>
+            </div>
+            {% set speaker = shortFilm.speakers is not empty ? shortFilm.speakers|first : null %}
+            <img src="{{ ('images/courts-metrages/' ~ shortFilm.posterShortFilm) | imagine_filter('thumbnail_large') }}"
+                 alt="Affiche du cours métrage {{ shortFilm.titleShortFilm }} présenté par {{ speaker.firstnameSpeaker }} {{ speaker.lastNameSpeaker }}"
+                 data-img-pop-up="{{ 'images/courts-metrages/courts-metrages-pop-up/' ~ shortFilm.posterPopUpShortFilm }}"
+                 data-duration="{{ shortFilm.durationShortFilm }}"
+                 data-genre="{{ shortFilm.genreShortFilm }}"
+                 data-title="{{ shortFilm.titleShortFilm }}"
+                 data-production="{{ shortFilm.productionShortFilm }}"
+                 data-pitch="{{ shortFilm.pitchShortFilm }}"
+                 {% if shortFilm.speakers is not empty %}
+                   {% set speaker = shortFilm.speakers|first %}
+                   data-news="{{ speaker.newsSpeaker }}"
+                   data-bio="{{ speaker.biographySpeaker|e('html_attr') }}"
+                   data-picture="{{ 'images/intervenants/realisateur-et-stagiaire/realisateur-et-stagiaire-profil/' ~ speaker.pictureSpeaker }}"
+                   data-name="{{ speaker.firstnameSpeaker }} {{ speaker.lastNameSpeaker }}"
+                   data-role="{{ speaker.roleSpeaker }}"
+                   data-company="{{ 'images/intervenants/logos-entreprises/' ~ speaker.pictureCompanySpeaker }}"
+                   data-imp-pop-up="{{ 'images/intervenants/realisateur-et-stagiaire/realisateur-et-stagiaire-pop-up/' ~ speaker.imgPopUpSpeaker }}"
+                 {% endif %}
+                 loading="lazy"
+            />
+            <div class="display-overlay-short-films-event-home"></div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}

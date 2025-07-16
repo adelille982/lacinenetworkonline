@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Connexion | La Ciné Network | Réseau du cinéma et de l'audiovisuel
+{% endblock %}
+
+{% block meta %}
+  <meta name="description"
+    content="Connectez-vous à votre espace personnel La Ciné Network pour publier des annonces, proposer vos courts-métrages, ou gérer votre profil professionnel dans le monde du cinéma." />
+  <meta name="keywords"
+    content="connexion cinéma, La Ciné Network, espace membre, login cinéma, se connecter, publier annonce cinéma, proposer court-métrage, réseau cinéma" />
+  <meta property="og:title" content="Connexion - La Ciné Network" />
+  <meta property="og:description"
+    content="Accédez à votre compte La Ciné Network et participez activement à la communauté du cinéma indépendant." />
+  <meta property="og:image"
+    content="{{
+    asset(
+      'images/general/images-des-formulaires/' ~ generalCineNetwork.imgAbout
+    )
+    }}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.lacinenetwork.com/connexion" />
+{% endblock %}
+
+{% block body %}
+  <section class="section-form-login">
+    <div class="image-container-form-login">
+      <img class="background-image-form-login"
+        src="{{ asset(
+          'images/general/images-des-formulaires/'
+            ~ generalCineNetwork.imgFormLogin
+        )|imagine_filter('fullscreen') }}"
+        alt="Image de fond du formulaire de connexion"
+        loading="lazy" />
+      <div class="overlay-form-login"></div>
+    </div>
+    <div class="form-login-container">
+      <div class="form-login">
+        <h3>
+          Connexion
+        </h3>
+        <form method="post">
+          {% if error %}
+            <div class="alert alert-danger">
+              {{ error.messageKey|trans(error.messageData, 'security') }}
+            </div>
+          {% endif %}
+
+          {% if app.user %}
+            <div class="alert alert-info">
+              Vous êtes connecté en tant que {{ app.user.userIdentifier }}.
+              <br />
+              <a href="{{ path('app_logout') }}">Déconnexion</a>
+            </div>
+          {% endif %}
+
+          <div class="form-login-group">
+            <label for="inputEmail">Email :</label>
+            <input type="email"
+              value="{{ last_username }}"
+              name="email"
+              id="inputEmail"
+              required
+              autofocus />
+          </div>
+
+          <div class="form-login-group">
+            <label for="inputPassword">Mot de passe :</label>
+            <input type="password"
+              name="password"
+              id="inputPassword"
+              required />
+          </div>
+
+          <div class="form-login-forgot-password">
+            <a href="{{ path('app_forgot_password_request') }}">
+              Mot de passe oublié ?
+            </a>
+          </div>
+
+          <div class="form-login-check">
+            <input type="checkbox"
+              id="accept_terms"
+              name="accept_terms"
+              required />
+            <label for="accept_terms">
+              J’accepte les <a href="{{ path('app_rgpd') }}" target="_blank">conditions
+                générales d’utilisation</a>
+            </label>
+          </div>
+
+          <input type="hidden"
+            name="_csrf_token"
+            value="{{ csrf_token('authenticate') }}" />
+
+          <div class="form-login-submit">
+            <button type="submit">Connexion</button>
+            <button type="button"
+              class="btn"
+              onclick="window.location.href='{{ path('app_register') }}'">
+              Je n'ai pas de compte
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+{% endblock %}

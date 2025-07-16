@@ -1,0 +1,27 @@
+{% if field.value is empty %}
+    <i>Aucun formateur</i>
+{% else %}
+    <ul style="padding-left: 0; list-style: none;">
+        {% for speaker in field.value %}
+            {% set controller = {
+                'Externe': 'App\\Controller\\Admin\\ProposalCrudController',
+                'Stagiaire': 'App\\Controller\\Admin\\InternCrudController',
+                'Réalisateur': 'App\\Controller\\Admin\\ProducerCrudController',
+                'Formateur': 'App\\Controller\\Admin\\TrainerCrudController',
+                'Jury': 'App\\Controller\\Admin\\JuryCrudController',
+                'Entreprise': 'App\\Controller\\Admin\\CompanySpeakerCrudController'
+            }[speaker.typeSpeaker]|default(null) %}
+
+            {% if controller %}
+                {% set url = ea_url()
+                    .setController(controller)
+                    .setAction('detail')
+                    .setEntityId(speaker.id)
+                %}
+                <li><a href="{{ url }}">{{ speaker }}</a></li>
+            {% else %}
+                <li>{{ speaker }}</li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endif %}

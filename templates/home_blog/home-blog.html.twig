@@ -1,0 +1,68 @@
+<section class="section-home-blog">
+    {% for post in postsBlog %}
+    <div class="home-blog-container" data-categories="{{ post.blogCategories|map(c => c.slugBlogCategory)|join(',') }}">
+        <div class="home-blog-date">
+            {% set date = post.publicationDateBlogPost|format_datetime(locale='fr', pattern='d MMMM yyyy') %}
+            {% set parts = date|split(' ') %}
+            <span>{{ parts[0] }}</span>
+            <span>{{ parts[1]|upper }}</span>
+            <span>{{ parts[2] }}</span>
+        </div>
+
+        <div class="home-blog-content-container">
+            <div class="home-blog-header">
+                <h2>{{ post.titlePost }}</h2>
+                <p>POSTÉ PAR {{ post.authorBlogPost|upper }}{% if post.blogCategories|length > 0 %} | 
+                    {{ post.blogCategories|map(c => c.nameBlogCategory)|join(', ')|upper }}
+                {% endif %}</p>
+            </div>
+
+            <div class="home-blog-image-container">
+                <div class="home-blog-image">
+                    <i class="bi bi-chevron-left chevron-left-blog"></i>
+                    <div class="home-blog-image-slider">
+                        <div class="home-blog-image-slider-inner">
+                            <img src="{{ ('images/blog/article-de-blog/' ~ post.mainImgPost) | imagine_filter('thumbnail_large') }}"
+                                class="blog-slider-img"
+                                alt="Image principale de l'article {{ post.titlePost }}"
+                                loading="lazy" />
+
+                            {% if post.imgnumber2 %}
+                                <img src="{{ ('images/blog/article-de-blog/' ~ post.imgnumber2) | imagine_filter('thumbnail_large') }}"
+                                    class="blog-slider-img"
+                                    alt="Image numéro 2 de l'article {{ post.titlePost }}"
+                                    loading="lazy" />
+                            {% endif %}
+
+                            {% if post.imgnumber3 %}
+                                <img src="{{ ('images/blog/article-de-blog/' ~ post.imgnumber3) | imagine_filter('thumbnail_large') }}"
+                                    class="blog-slider-img"
+                                    alt="Image numéro 3 de l'article {{ post.titlePost }}"
+                                    loading="lazy" />
+                            {% endif %}
+
+                            {% if post.imgnumber4 %}
+                                <img src="{{ ('images/blog/article-de-blog/' ~ post.imgnumber4) | imagine_filter('thumbnail_large') }}"
+                                    class="blog-slider-img"
+                                    alt="Image numéro 4 de l'article {{ post.titlePost }}"
+                                    loading="lazy" />
+                            {% endif %}
+                        </div>
+                    </div>
+                    <i class="bi bi-chevron-right chevron-right-blog"></i>
+                </div>
+            </div>
+
+            <div class="home-blog-content">
+                <p>{{ post.shortDescriptionBlogPost|raw }}</p>
+            </div>
+
+            <div class="home-blog-button">
+                <a href="{{ path('app_blog_post_show', { slug: post.slugBlogPost }) }}"><button>EN SAVOIR PLUS ...</button></a>
+            </div>
+
+            <hr class="hr-home-blog">
+        </div>
+    </div>
+    {% endfor %}
+</section>

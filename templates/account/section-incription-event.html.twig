@@ -1,0 +1,63 @@
+<section class="section-event-account">
+  <h2 class="title-event-account" id="prochain-evenement-mon-compte">VOS PROCHAINS ÉVÉNEMENTS</h2>
+
+    <div class="flash-container-event-account">
+    {% for message in all_flashes['warning_event_account'] ?? [] %}
+        <div class="flash-message-error-event-account">{{ message }}</div>
+    {% endfor %}
+    {% for message in all_flashes['success_event_account'] ?? [] %}
+        <div class="flash-message-success-event-account">{{ message }}</div>
+    {% endfor %}
+    </div>
+
+  {% if userEvents is not empty %}
+    <div class="event-slider-account">
+    {% if userEvents|length > 1 %}
+      <div class="chevron-wrapper-account">
+        <i class="bi bi-arrow-left-circle chevron-event-account" id="chevron-left-event-account"></i>
+      </div>
+    {% endif %}
+
+    <div class="container-inscription-event-account" id="event-carousel-container">
+    {% for userEvent in userEvents %}
+        {% set event = userEvent.event %}
+        <div class="card-inscription-event-account event-slide">
+          <div class="card-inscription-event-account" data-event-id="{{ event.id }}">
+            <div class="background-event-card-account" style="background-image: url('{{ asset('images/evenements/images-evenements/' ~ event.imgEvent) }}');"></div>
+            <div class="overlay-event-card-account"></div>
+
+            <div class="event-info-inscription-account">
+              <h3 class="event-title-account">{{ event.titleEvent }}</h3>
+              <p class="event-date-account">
+                Le {{ event.dateEvent|format_datetime(locale='fr', pattern='d MMMM Y')|upper }}
+              </p>
+              <p class="event-location-account">
+                Lieu :
+                <a href="https://www.google.com/maps/search/?api=1&query={{ (event.location.streetLocation ~ ' ' ~ event.location.postalCode ~ ' ' ~ event.location.cityLocation)|url_encode }}"
+                   target="_blank" rel="noopener noreferrer">
+                  {{ event.location.streetLocation ~ ' ' ~ event.location.postalCode ~ ' ' ~ event.location.cityLocation }}
+                </a>
+              </p>
+            </div>
+
+            <div class="event-action-inscription-account">
+            <form action="{{ path('account_event_unregister', { id: event.id }) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir annuler votre inscription à cet événement ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('cancel_event_' ~ userEvent.id) }}">
+                <button type="submit" class="btn-cancel-inscription-account">Annuler l'inscription</button>
+            </form>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+    {% if userEvents|length > 1 %}
+      <div class="chevron-wrapper-account">
+        <i class="bi bi-arrow-right-circle chevron-event-account" id="chevron-right-event-account"></i>
+      </div>
+    {% endif %}
+    </div>
+  {% else %}
+    <p class="no-event-account">Vous n'êtes inscrit à aucun événement pour le moment.</p>
+  {% endif %}
+</section>

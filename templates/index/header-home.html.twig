@@ -1,0 +1,87 @@
+<header class="header-home">
+  <div class="header-home-container">
+    {% if headerHome.headerHomeImgs|length > 0 %}
+      <div class="header-home-slider">
+        {% for img in headerHome.headerHomeImgs %}
+          <img src="{{ asset('images/en-tete-de-page/accueil/' ~ img.imageHeaderHome) }}" alt="Image d'en tête de page de la page d'acceuil du site La Ciné Network" class="header-home-slide{% if loop.first %} active{% endif %}" />
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="overlay-header-home"></div>
+
+  <div class="total-content-header-home">
+    <div class="title-header-home-and-video-container">
+      <div class="title-and-subtitle-header-home-container">
+        <h1 class="title-header-home">{{ headerHome.titleHeaderHome }}</h1>
+        <h2 class="subtitle-header-home">{{ headerHome.sloganHeaderHome }}</h2>
+        <div class="container-boutton-header-home">
+        <a href="#inscription-evenement" class="button-header-home">PARTICIPER</a>
+        </div>
+      </div>
+      
+      <div class="video-header-home-container">
+        <video class="header-video" autoplay loop muted controls>
+          <source src="{{ ('images/en-tete-de-page/accueil/video-accueil/' ~ headerHome.videoHeaderHome) }}" type="video/mp4">
+          Votre navigateur ne supporte pas la balise vidéo.
+        </video>
+      </div>
+    </div>
+
+    <div class="number-header-home-container">
+        <div class="number-header-home">
+          <img src="{{ 'images/images-necessaire-au-site/icon-serrage-de-main.png' | imagine_filter('thumbnail_small') }}"
+           alt="{{ headerHome.numberEdition }} éditions"
+           loading="lazy" />
+          <div class="number-and-text">
+            <p class="number">
+              {{ headerHome.numberEdition }}
+            </p>
+            <p class="label">
+              Éditions
+            </p>
+          </div>
+        </div>
+        <div class="number-header-home">
+          <img src="{{ 'images/images-necessaire-au-site/icon-user.png' | imagine_filter('thumbnail_small') }}"
+           alt="{{ headerHome.numberParticipant }} participants"
+           loading="lazy" />
+          <div class="number-and-text">
+            <p class="number">
+              {{ headerHome.numberParticipant }}
+            </p>
+            <p class="label">
+              Participants
+            </p>
+          </div>
+        </div>
+        <div class="number-header-home">
+          <img src="{{ 'images/images-necessaire-au-site/icon-video.png' | imagine_filter('thumbnail_small') }}"
+           alt="{{ headerHome.numberMovieReceived }} films reçus"
+           loading="lazy" />
+          <div class="number-and-text">
+            <p class="number">
+              {{ headerHome.numberMovieReceived }}
+            </p>
+            <p class="label">
+              Films reçus
+            </p>
+          </div>
+        </div>
+        <div class="number-header-home">
+          <img src="{{ 'images/images-necessaire-au-site/icon-cinema.png' | imagine_filter('thumbnail_small') }}"
+           alt="{{ headerHome.numberMovieProjected }} films projetés"
+           loading="lazy" />
+          <div class="number-and-text">
+            <p class="number">
+              {{ headerHome.numberMovieProjected }}
+            </p>
+            <p class="label">
+              Films projetés
+            </p>
+          </div>
+        </div>
+    </div>
+    </div>
+  </div>
+</header>

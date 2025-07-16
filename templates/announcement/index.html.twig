@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  {% if otherHeader is defined and otherHeader.titleSeoPage is not empty %}
+    {{ otherHeader.titleSeoPage|striptags }}
+  {% else %}
+    Annonces | La Ciné Network | Réseau du cinéma et de l'audiovisuel
+  {% endif %}
+{% endblock %}
+
+{% block meta %}
+  {% set metaDescription = otherHeader is defined and otherHeader.metaDescriptionPage is not empty
+    ? otherHeader.metaDescriptionPage|striptags
+    : "Publiez ou consultez des annonces dans l’audiovisuel : comédiens, techniciens, maquilleurs, monteurs, régisseurs… La Ciné Network connecte les talents du cinéma indépendant."
+  %}
+
+  {% set metaKeywords = otherHeader is defined and otherHeader.seoKeyPage is not empty
+    ? otherHeader.seoKeyPage|striptags
+    : "annonce cinéma, technicien audiovisuel, recrutement cinéma, comédien disponible, postuler tournage, équipe film court-métrage, La Ciné Network, offres audiovisuel, casting cinéma, chef opérateur, régisseur, maquilleur, monteur, perchman, directeur de production, steadycam, effets spéciaux, collaborateur audiovisuel, recherche équipe tournage"
+  %}
+
+  <meta name="description" content="{{ metaDescription }}">
+  <meta name="keywords" content="{{ metaKeywords }}">
+
+  <meta property="og:title" content="{% if otherHeader is defined and otherHeader.titleSeoPage is not empty %}
+    {{ otherHeader.titleSeoPage|striptags }}
+  {% else %}
+    Annonces Audiovisuelles – Recrutez ou postulez | La Ciné Network
+  {% endif %}">
+
+  <meta property="og:description" content="{{ metaDescription }}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.lacinenetwork.com/annonces">
+  <meta property="og:image" content="{{ asset('images/general/images-des-formulaires/' ~ generalCineNetwork.imgAbout) }}" />
+{% endblock %}
+
+{% block body %}
+
+<main>
+{% include 'general/other-header/header-announcement.html.twig' %}
+<button class="menu-announcement-toggle-btn">
+  MENU
+</button>
+  <section class="main-container-announcement">
+    {% include 'general/menu/menu-announcement.html.twig' %}
+    {% include 'announcement/card-announcement.html.twig' %}
+  </section>
+    {% include 'net-pitch/display-formation-net-pitch.html.twig' %}
+    {% include 'announcement/section-form-announcement.html.twig' %}
+</main>
+{% endblock %}

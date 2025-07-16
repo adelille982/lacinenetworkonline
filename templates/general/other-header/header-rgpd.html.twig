@@ -1,0 +1,12 @@
+{% if otherHeader %}
+<header class="header-rgpd">
+  <img src="{{ asset('images/en-tete-de-page/autre/' ~ otherHeader.mainImageHeader) | imagine_filter('fullscreen') }}" alt="{{ otherHeader.titleHeader }}" class="img-header-rgpd" loading="lazy" />
+  <div class="header-rgpd-overlay"></div>
+  <div class="header-rgpd-content">
+    <h1 class="title-header-rgpd">{{ otherHeader.titleHeader|striptags }}</h1>
+    {% if otherHeader.sloganHeader is not empty %}
+      <p class="subtitle-header-rgpd">{{ otherHeader.sloganHeader|striptags }}</p>
+    {% endif %}
+  </div>
+</header>
+{% endif %}

@@ -1,0 +1,14 @@
+<ul style="list-style-type: none; padding-left: 0; text-align: left;">
+    {% for registration in field.value %}
+            <li>
+            {{ registration.firstnameRegistration }} {{ registration.lastnameRegistration }}<br>
+            ({{ registration.emailRegistration }})<br>
+            ({{ registration.telRegistration }})<br>
+            ({{ registration.statutRegistration }})
+            </li>
+            <hr>
+    {% else %}
+        <li>Aucune inscription archivée.</li>
+    {% endfor %}
+</ul>
+

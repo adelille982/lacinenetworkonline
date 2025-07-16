@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Compte - La Ciné Network{% endblock %}
+
+{% block body %}
+{% set all_flashes = app.flashes %}
+    {% include 'account/card-account.html.twig' %}
+    {% include 'account/section-incription-event.html.twig' %}
+    {% include 'account/section-announcement-account.html.twig' %}
+    {% include 'account/commentary-account.html.twig' %}
+    {% include 'net-pitch/display-formation-net-pitch.html.twig' %}
+    {% for announcement in userAnnouncements %}
+        {% include 'general/pop-up/pop-up-edit-announcement-account.html.twig' with { announcement: announcement, subCategories: subCategories, now: now } %}
+        {% include 'general/pop-up/pop-up-announcement.html.twig' with { announcement: announcement, now: now } %}
+    {% endfor %}
+{% endblock %}

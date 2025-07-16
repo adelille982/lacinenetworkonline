@@ -1,0 +1,69 @@
+{% if partners|length > 0 %}
+<section class="partners-section">
+    <div class="title-and-logo-partners-container">
+        <div class="title-partner-container">
+            <h2 class="title-partners">NOS PARTENAIRES</h2>
+        </div>
+        <div class="logo-partners-slider-wrapper">
+            <div class="logo-partners-slider-track" id="logo-partners-slider-track">
+                {% for partner in partners %}
+                    <div class="logo-partner-slide">
+                    {% if partner.linkPartner %}
+                        <a href="{{ partner.linkPartner|striptags }}" target="_blank">
+                            <img class="img-partners"
+                                src="{{ ('images/general/partenaires/' ~ partner.logoPartner) | imagine_filter('thumbnail_medium') }}"
+                                alt="Logo du partenaire {{ partner.namePartner }}"
+                                loading="lazy" />
+                        </a>
+                    {% else %}
+                        <img class="img-partners"
+                            src="{{ ('images/general/partenaires/' ~ partner.logoPartner) | imagine_filter('thumbnail_medium') }}"
+                            alt="Logo du partenaire {{ partner.namePartner }}"
+                            loading="lazy" />
+                    {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const track = document.getElementById("logo-partners-slider-track");
+    const wrapper = document.querySelector(".logo-partners-slider-wrapper");
+
+    if (!track || !wrapper) return;
+    track.innerHTML += track.innerHTML;
+
+    const card = track.querySelector(".logo-partner-slide");
+    const cardWidth = card.offsetWidth + 20;
+    const totalCards = track.children.length / 2;
+
+    let currentIndex = 0;
+    let isPaused = false;
+
+    wrapper.addEventListener("mouseenter", () => isPaused = true);
+    wrapper.addEventListener("mouseleave", () => isPaused = false);
+
+    function slideToNext() {
+        if (isPaused) return;
+
+        currentIndex++;
+        track.style.transition = 'transform 0.5s ease';
+        track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+
+        if (currentIndex >= totalCards) {
+            setTimeout(() => {
+                track.style.transition = 'none';
+                track.style.transform = `translateX(0px)`;
+                currentIndex = 0;
+            }, 500);
+        }
+    }
+
+    setInterval(slideToNext, 2500);
+});
+
+</script>

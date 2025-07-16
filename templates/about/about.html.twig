@@ -1,0 +1,32 @@
+{% if generalCineNetwork is not null %}
+<section class="card-info-about reverse-mobile">
+  <div class="info-info-about">
+    <div class="text-info-about text-block">
+      <h2>À propos</h2>
+      <p>{{ generalCineNetwork.textAbout|raw }}</p>
+    </div>
+  </div>
+  <div class="img-info-about-container">
+  <img src="{{ ('images/general/images-des-formulaires/' ~ generalCineNetwork.imgAbout) | imagine_filter('thumbnail_large') }}"
+  alt="Logo La Ciné Network"
+  loading="lazy" />
+  </div>
+</section>
+{% endif %}
+
+{% for speaker in speakers %}
+<section class="card-speaker-about {% if loop.index is even %}reverse{% endif %}">
+  <div class="img-speaker-about-container">
+<img src="{{ ('images/intervenants/entreprise/entreprise-profil/' ~ speaker.pictureSpeaker)}}"
+     alt="Photo de {{ speaker.firstNameSpeaker }} {{ speaker.lastNameSpeaker }}"
+     loading="lazy" />
+  </div>
+  <div class="info-speaker-about">
+    <div class="text-speaker-about text-block">
+      <h2>{{ speaker.roleSpeaker|upper }}</h2>
+      <h3>{{ speaker.firstNameSpeaker|raw }} {{ speaker.lastNameSpeaker|raw }}</h3>
+      <p>{{ speaker.biographySpeaker|raw }}</p>
+    </div>
+  </div>
+</section>
+{% endfor %}

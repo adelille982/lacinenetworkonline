@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  {% if otherHeader is defined and otherHeader.titleSeoPage is not empty %}
+    {{ otherHeader.titleSeoPage|striptags }}
+  {% else %}
+    Blog | La Ciné Network | Réseau du cinéma et de l'audiovisuel
+  {% endif %}
+{% endblock %}
+
+{% block meta %}
+  {% set otherDescription = otherHeader.metaDescriptionPage is defined
+    and otherHeader.metaDescriptionPage is not empty
+    ? otherHeader.metaDescriptionPage|striptags
+    : null
+  %}
+  {% set otherKeywords = otherHeader.seoKeyPage is defined
+    and otherHeader.seoKeyPage is not empty
+    ? otherHeader.seoKeyPage|striptags
+    : null
+  %}
+
+  {% set finalDescription = metaDescriptionCategory ?? otherDescription
+    ?? 'Découvrez les derniers articles cinéma de La Ciné Network : interviews, actualités, conseils et retours d’expérience de professionnels du secteur.'
+  %}
+  {% set finalKeywords = metaKeywordsCategory ?? otherKeywords
+    ?? 'cinéma, court-métrage, blog cinéma, actualité cinéma, La Ciné Network, interviews réalisateurs, projets audiovisuels, tournage, production film, festival court métrage'
+  %}
+
+  <meta name="description" content="{{ finalDescription }}" />
+  <meta name="keywords" content="{{ finalKeywords }}" />
+<meta property="og:image" content="{{ asset('images/general/images-des-formulaires/' ~ generalCineNetwork.imgAbout) }}" />
+  <meta property="og:type" content="website" />
+{% endblock %}
+
+{% block body %}
+  {% include 'general/other-header/header-home-blog.html.twig' %}
+<button class="menu-blog-toggle-btn">
+  MENU
+</button>
+  <main class="main-home-blog">
+    {% include 'home_blog/home-blog.html.twig' %}
+    {% include 'general/menu/menu-home-blog.html.twig' %}
+  </main>
+  {% include 'net-pitch/display-formation-net-pitch.html.twig' %}
+  <script>
+    window.initialCategoryFromController = "{{
+      activeCategorySlug|default('all')
+    }}";
+  </script>
+{% endblock %}

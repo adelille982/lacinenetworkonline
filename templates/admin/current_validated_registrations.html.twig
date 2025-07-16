@@ -1,0 +1,15 @@
+<ul style="list-style-type: none; padding-left: 0;">
+    {% if field.value is empty %}
+        <li>Aucun étudiant validé.</li>
+    {% else %}
+        {% for registration in field.value %}
+            <li>
+            {{ registration.firstnameRegistration }} {{ registration.lastnameRegistration }}<br>
+            ({{ registration.emailRegistration }})<br>
+            ({{ registration.telRegistration }})<br>
+            ({{ registration.statutRegistration }})
+            </li>
+            <hr>
+        {% endfor %}
+    {% endif %}
+</ul>

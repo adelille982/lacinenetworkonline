@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  E-mail de réinitialisation envoyé | La Ciné Network | Réseau du cinéma et de
+  l'audiovisuel
+{% endblock %}
+
+{% block body %}
+  <div class="check-email-wrapper">
+    <div class="check-email-card">
+      <h1 class="check-email-title">
+        📧 Vérifiez votre boîte mail
+      </h1>
+      <p class="check-email-text">
+        Si un compte est associé à cette adresse, vous allez recevoir un e-mail
+        contenant un lien pour réinitialiser votre mot de passe.
+      </p>
+      <p class="check-email-text">
+        Ce lien expirera dans
+        <strong>
+          {{
+            resetToken.expirationMessageKey|trans(
+              resetToken.expirationMessageData,
+              'ResetPasswordBundle'
+            )
+          }}.
+        </strong>
+      </p>
+      <p class="check-email-text">
+        Si vous ne recevez rien, pensez à vérifier votre dossier spam ou
+        <a href="{{ path('app_forgot_password_request') }}"
+          class="check-email-link">
+          réessayez ici
+        </a>.
+      </p>
+    </div>
+  </div>
+{% endblock %}

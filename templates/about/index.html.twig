@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  {% if otherHeader is defined and otherHeader.titleSeoPage is not empty %}
+    {{ otherHeader.titleSeoPage|striptags }}
+  {% else %}
+    À Propos - La Ciné Network | Réseau du cinéma et de l'audiovisuel
+  {% endif %}
+{% endblock %}
+
+{% block meta %}
+  {% set metaDescription = otherHeader is defined and otherHeader.metaDescriptionPage is not empty
+    ? otherHeader.metaDescriptionPage|striptags
+    : 'La Ciné Network est un réseau collaboratif dédié aux professionnels du cinéma et de l’audiovisuel. Découvrez notre mission et notre histoire.'
+  %}
+
+  {% set metaKeywords = otherHeader is defined and otherHeader.seoKeyPage is not empty
+    ? otherHeader.seoKeyPage|striptags
+    : 'La Ciné Network, à propos, réseau cinéma, histoire La Ciné Network, projet audiovisuel, événement cinéma, mission audiovisuelle, équipe, valeurs'
+  %}
+
+  <meta name="description" content="{{ metaDescription }}">
+  <meta name="keywords" content="{{ metaKeywords }}">
+
+  <meta property="og:title" content="{% if otherHeader is defined and otherHeader.titleSeoPage is not empty %}
+    {{ otherHeader.titleSeoPage|striptags }}
+  {% else %}
+    À Propos - La Ciné Network
+  {% endif %}">
+
+  <meta property="og:description" content="{{ metaDescription }}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.lacinenetwork.com/a-propos" />
+  <meta property="og:image" content="{{ asset('images/general/images-des-formulaires/' ~ generalCineNetwork.imgAbout) }}" />
+{% endblock %}
+
+{% block body %}
+  {% include 'about/about.html.twig' %}
+  {% include 'net-pitch/display-formation-net-pitch.html.twig' %}
+{% endblock %}

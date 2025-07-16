@@ -1,0 +1,131 @@
+{% if formation %}
+<section class="sheet-formations-net-pitch-container">
+
+  {% if formations|length > 1 and previousFormation %}
+    <div class="chevron-left-net-pitch-container">
+      <a href="{{ path('app_net-pitch', { slug: previousFormation.slugNetPitchformation }) }}">
+        <i class="bi bi-arrow-left-circle"></i>
+      </a>
+    </div>
+  {% endif %}
+
+  <div class="title-container">
+    <h2 class="title-sheet-formations-net-pitch">
+      {{ formation.titleNetPitchFormation }}
+    </h2>
+    <div class="underline-title-sheet-formation-net-pitch"></div>
+  </div>
+
+  {% if formations|length > 1 and nextFormation %}
+    <div class="chevron-right-net-pitch-container">
+      <a href="{{ path('app_net-pitch', { slug: nextFormation.slugNetPitchformation }) }}">
+        <i class="bi bi-arrow-right-circle"></i>
+      </a>
+    </div>
+  {% endif %}
+
+</section>
+{% endif %}
+
+
+{% if formation.gain %}
+  {% if formation.gain.linkGain %}
+    <a href="{{ formation.gain.linkGain }}"
+       class="lowers-sheet-formation-net-pitch-link"
+       target="_blank"
+       rel="noopener noreferrer">
+  {% endif %}
+
+  <section class="lowers-sheet-formation-net-pitch">
+    <img src="{{ asset('images/formation/gain/' ~ formation.gain.imgGain) | imagine_filter('thumbnail_large') }}"
+         alt="Image de fond du gain de la formation {{ formation.titleNetPitchFormation }}"
+         class="img-lowers-sheet-formation-net-pitch"
+         loading="lazy" />
+
+    <div class="lowers-overlay-sheet-formation-net-pitch"></div>
+
+    <div class="content-lowers-sheet-formation-net-pitch">
+      <p class="title-gain">{{ formation.gain.titleGain }}</p>
+      <p class="slogan-gain">{{ formation.gain.sloganGain }}</p>
+    </div>
+  </section>
+
+  {% if formation.gain.linkGain %}
+    </a>
+  {% endif %}
+{% endif %}
+
+{% if formation %}
+<section class="description-sheet-formation-net-pitch">
+  <div class="description-sheet-formation-net-pitch-left">
+  {% set countFutureSessions = futureSessions|length %}
+{% if countFutureSessions > 0 %}
+    <h2>VÉRIFIER SI LA FORMATION EST DISPONIBLE DANS VOTRE RÉGION:</h2>
+
+    <div class="session-sheet-formation-net-pitch">
+      <label for="session">SESSION DE FORMATION :</label>
+      <select class="session-select" id="session-select-dates" onchange="updateLocationSelect(this.selectedIndex)">
+        {% for s in futureSessions|filter(s => s.netPitchFormation and s.netPitchFormation.id == formation.id) %}
+          {% set validatedCount = s.getValidatedRegistrations|length %}
+          {% set totalMax = s.maxNumberRegistrationSessionNetPitchFormation %}
+          {% set remaining = totalMax - validatedCount %}
+          {% set speakerIds = s.speakers|map(s => s.id)|join(',') %}
+          <option
+            data-session-id="{{ s.id }}"
+            data-remaining="{{ remaining }}" 
+            data-total="{{ totalMax }}" 
+            data-valid="{{ validatedCount }}"
+            data-speakers="{{ s.speakers|map(s => s.id)|join(',') }}">
+            {{ s.startDateSessionNetPitchFormation|date('d/m/Y') }} au {{ s.endDateSessionNetPitchFormation|date('d/m/Y') }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="availability-sheet-formation-net-pitch">
+      <select class="availability-select" id="availability-location">
+        {% for s in futureSessions|filter(s => s.netPitchFormation and s.netPitchFormation.id == formation.id) %}
+          {% set locationLabel = s.location 
+              ? s.location.streetLocation ~ ', ' ~ s.location.postalCode ~ ' ' ~ s.location.cityLocation|upper 
+              : 'EN LIGNE' %}
+          <option data-session-index="{{ loop.index0 }}" class="location-option" style="display: none;">
+            {{ locationLabel }}
+          </option>
+        {% endfor %}
+      </select>
+
+      <span class="availability-status" id="availability-status">
+        <!-- Dynamique en JS -->
+      </span>
+    </div>
+    {% endif %}
+
+    <div class="detail-p-sheet-formation-net-pitch">
+      <p><strong>NOMBRE DE PARTICIPANTS :</strong> {{ formation.maxNumberNetPitchFormation }} maximum sur sélection des dossiers</p>
+      <p><strong>DURÉE DE FORMATION :</strong> {{ formation.durationNetPitchFormation }}</p>
+      <p><strong>FINANCEMENT :</strong> {{ formation.fundingNetPitchFormation }}</p>
+
+      {% if formation.pdfNetPitchFormation %}
+        <p class="link-pdf-formation">
+          <strong>VOIR LA FICHE FORMATION</strong> 
+          <a href="{{ asset('images/formation/pdf-des-formations/' ~ formation.pdfNetPitchFormation) }}" target="_blank">
+            <i class="bi bi-file-earmark-pdf-fill icon-pdf"></i>
+          </a>
+        </p>
+      {% else %}
+        <p class="no-pdf-available"></p>
+      {% endif %}
+    </div>
+
+{% set countFutureSessions = futureSessions|length %}
+{% if countFutureSessions > 0 %}
+    <a href="#pre-inscription">
+      <button class="subscribe-button">S'INSCRIRE</button>
+    </a>
+    {% endif %}
+  </div>
+
+  <div class="description-sheet-formation-net-pitch-right">
+    <p>{{ formation.shortDescriptionNetPitchFormation|raw }}</p>
+  </div>
+</section>
+{% endif %}

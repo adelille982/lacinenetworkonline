@@ -1,0 +1,15 @@
+<header class="header-blog-post">
+  <img src="{{ asset('images/blog/article-de-blog/' ~ post.mainImgPost) | imagine_filter('fullscreen') }}"
+     alt="Image principal de l'article {{ post.titlePost }}"
+     class="main-img-header-blog-post"
+     loading="lazy" />
+  <div class="header-blog-post-overlay"></div>
+  <div class="header-blog-post-content">
+    <h1 class="title-header-blog-post">{{ post.titlePost|upper }}</h1>
+    
+    {% set date = post.publicationDateBlogPost|format_datetime(locale='fr', pattern='d MMMM yyyy') %}
+    <p class="subtitle-header-blog-post">
+      {{ date|upper }} | PAR {{ post.authorBlogPost|upper }}
+    </p>
+  </div>
+</header>

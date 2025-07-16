@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  {% if otherHeader is defined and otherHeader.titleSeoPage is not empty %}
+    {{ otherHeader.titleSeoPage|striptags }}
+  {% else %}
+    Postuler | La Ciné Network | Réseau du cinéma et de l'audiovisuel
+  {% endif %}
+{% endblock %}
+
+{% block meta %}
+  {% set metaDescription = (otherHeader is defined and otherHeader.metaDescriptionPage is not empty) 
+      ? otherHeader.metaDescriptionPage|striptags 
+      : 'Vous souhaitez rejoindre l’équipe de La Ciné Network ? Découvrez nos opportunités de collaboration et postulez pour faire partie de notre aventure cinématographique.' 
+  %}
+
+  {% set metaKeywords = (otherHeader is defined and otherHeader.seoKeyPage is not empty)
+      ? otherHeader.seoKeyPage|striptags 
+      : 'postuler La Ciné Network, recrutement cinéma, offre emploi cinéma, travailler dans le cinéma, équipe La Ciné Network, carrière audiovisuelle, recrutement audiovisuel, recrutement cinéma indépendant' 
+  %}
+
+  <meta name="description" content="{{ metaDescription }}">
+  <meta name="keywords" content="{{ metaKeywords }}">
+
+  <meta property="og:title" content="{% if otherHeader is defined and otherHeader.titleSeoPage is not empty %}
+    {{ otherHeader.titleSeoPage|striptags }}
+  {% else %}
+    Postuler - Rejoignez La Ciné Network
+  {% endif %}">
+
+  <meta property="og:description" content="{{ metaDescription }}">
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.lacinenetwork.com/postuler" />
+  <meta property="og:image" content="{{ asset('images/general/images-des-formulaires/' ~ generalCineNetwork.imgAbout) }}" />
+{% endblock %}
+
+{% block body %}
+{% set all_flashes = app.flashes %}
+    {% include 'general/other-header/header-postulate.html.twig' %}
+    {% include 'postulate/postulate.html.twig' %}
+{% endblock %}

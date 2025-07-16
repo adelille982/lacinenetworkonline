@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ post.titlePost }} | La Ciné Network | Réseau du cinéma et de l'audiovisuel{% endblock %}
+
+{% block meta %}
+    <meta name="description" content="{{ metaDescription ?? 'Découvrez cet article de blog exclusif proposé par La Ciné Network, explorant le monde du cinéma, de la production et des talents émergents.' }}">
+    <meta name="keywords" content="{{ metaKeywords ?? 'cinéma, blog, La Ciné Network, tournage, court-métrage, interview, film indépendant, actualités cinéma' }}">
+    <meta property="og:image" content="{{ asset('images/general/images-des-formulaires/' ~ generalCineNetwork.imgAbout) }}" />
+    <meta property="og:type" content="website" />
+    
+{% endblock %}
+
+{% block body %}
+    {% include 'general/other-header/header-blog-post.html.twig' %}
+<button class="menu-blog-toggle-btn">
+  MENU
+</button>
+    <main class="blog-post-main">
+    {% include 'blog_post/blog-post.html.twig' %}
+    {% include 'general/menu/menu-home-blog.html.twig' %}
+    </main>
+    {% include 'net-pitch/display-formation-net-pitch.html.twig' %}
+{% endblock %}

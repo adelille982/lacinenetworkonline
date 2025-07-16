@@ -1,0 +1,43 @@
+<section class="blog-post-section">
+    {% if post.videoBlogPost %}
+<video class="video-blog-post-2" autoplay muted playsinline loop>
+    <source src="{{ asset('images/blog/video-blog/' ~ post.videoBlogPost) }}" type="video/mp4">
+    Votre navigateur ne supporte pas la lecture de vidéos.
+</video>
+    {% elseif post.imgNumber2 %}
+        <img src="{{ asset('images/blog/article-de-blog/' ~ post.imgNumber2) | imagine_filter('thumbnail_large') }}"
+        alt="Image numéro 2 de l'article {{ post.titlePost }}"
+        class="img-blog-post-2"
+        loading="lazy" />
+    {% endif %}
+
+    <p>{{ post.contentBlogPost|raw }}</p>
+
+    <div class="double-img-blog-post">
+        {% if post.imgNumber3 %}
+            <img src="{{ asset('images/blog/article-de-blog/' ~ post.imgNumber3) | imagine_filter('thumbnail_large') }}"
+                alt="Image numéro 3 de l'article {{ post.titlePost }}"
+                class="img-blog-post-3 {% if not post.imgNumber4 %}full-width-img-blog-post{% endif %}"
+                loading="lazy" />
+        {% endif %}
+        {% if post.imgNumber4 %}
+            <img src="{{ ('images/blog/article-de-blog/' ~ post.imgNumber4) | imagine_filter('thumbnail_large') }}"
+                alt= "Image numéro 4 de l'article {{ post.titlePost }}"
+                class="img-blog-post-4"
+                loading="lazy" />
+        {% endif %}
+    </div>
+
+    <p>{{ post.contentBlogPost2|raw }}</p>
+
+    <span class="similar-articles">
+        ARTICLES SIMILAIRES :
+        {% set related = post.blogPost|first %}
+        {% if related %}
+            <a href="{{ path('app_blog_post_show', { slug: related.slugBlogPost }) }}" class="article-title">
+                {{ related.titlePost|upper }}
+            </a>
+        {% endif %}
+    </span>
+    <hr class="separator-similar-articles" />
+</section>

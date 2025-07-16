@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Mot de passe oublié | La Ciné Network | Réseau du cinéma et de l'audiovisuel
+{% endblock %}
+
+{% block body %}
+  <section class="section-reset-password">
+    <div class="image-container-reset-password">
+      <img class="background-image-reset-password"
+        src="{{ asset(
+          'images/general/images-des-formulaires/'
+            ~ generalCineNetwork.imgFormResetPasword
+        )|imagine_filter('fullscreen') }}"
+        alt="Image de fond du formulaire de mot de passe oublié"
+        loading="lazy" />
+      <div class="overlay-reset-password"></div>
+    </div>
+
+    <div class="form-reset-container">
+      {% for flash_error in app.flashes('reset_password_error') %}
+        <div class="alert alert-danger" role="alert">
+          {{ flash_error }}
+        </div>
+      {% endfor %}
+
+      <h1>
+        Mot de passe oublié
+      </h1>
+
+      <small>
+        Saisissez votre adresse e-mail et nous vous enverrons un lien pour
+        réinitialiser votre mot de passe.
+      </small>
+
+      {{ form_start(requestForm) }}
+      {{ form_row(requestForm.email) }}
+      <button class="btn btn-primary">
+        Envoyer un e-mail de réinitialisation du mot de passe
+      </button>
+      {{ form_end(requestForm) }}
+    </div>
+  </section>
+{% endblock %}

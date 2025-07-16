@@ -1,0 +1,553 @@
+<section class="section-announcement-account-wrapper">
+  {% if userAnnouncements is not empty %}
+    <div class="announcement-card-carousel-container">
+      <div class="section-card-announcement-account"
+        id="announcement-account-grid">
+        {% for announcement in userAnnouncements %}
+          <div class="announcement-slide">
+            <div class="container-card-announcement-account"
+              data-category-id="{{
+              announcement.subCategoryAnnouncement.getCategoryAnnouncement.id
+              }}"
+              data-subcategory-id="{{
+              announcement.subCategoryAnnouncement.id
+              }}"
+              data-type="{{ announcement.typeAnnouncement|lower }}"
+              data-created="{{ announcement.createdAtAnnouncement|date(
+                'Y-m-d'
+              ) }}"
+              data-start="{{ announcement.availabilityAnnouncement|date(
+                'Y-m-d'
+              ) }}"
+              data-end="{{ announcement.expiryAnnouncement|date('Y-m-d') }}"
+              data-department="{{ announcement.departmentAnnouncement }}">
+              <div class="card-announcement-account-left">
+                <img src="{{ ('images/annonce/image-categorie-annonce/'
+                    ~ announcement.subCategoryAnnouncement.getCategoryAnnouncement.imgCategoryAnnouncement)|imagine_filter(
+                    'thumbnail_large'
+                  ) }}"
+                  alt="Image de la catégorie {{
+                  announcement.subCategoryAnnouncement.getCategoryAnnouncement.nameCategoryAnnouncement
+                  }}" />
+                <div class="overlay-card-announcement-account-left">
+                  <div class="category-line-account">
+                    <i class="bi bi-circle-fill {{
+                      announcement.subCategoryAnnouncement.getCategoryAnnouncement.colorCategoryAnnouncement
+                      }}">
+
+                    </i>
+                    <span class="category-name-account">
+                      {{
+                        announcement.subCategoryAnnouncement.getCategoryAnnouncement.nameCategoryAnnouncement
+                      }}
+                    </span>
+                  </div>
+
+                  <p class="announcement-type-account">
+                    {{ announcement.typeAnnouncement|upper }}
+                  </p>
+
+                  <p class="role-account">
+                    {{ announcement.subCategoryAnnouncement.nameSubCategory }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="card-announcement-account-right">
+                <div class="date-account">
+                  <span class="label-account">
+                    {% if announcement.typeAnnouncement == 'Disponible' %}
+                      Période de disponibilité :
+                    {% else %}
+                      Période de tournage :
+                    {% endif %}
+                  </span>
+                  <span class="value">
+                    Du {{ announcement.availabilityAnnouncement|date('d/m/Y') }}
+                    au {{ announcement.expiryAnnouncement|date('d/m/Y') }}
+                  </span>
+                  <div class="separator-account"></div>
+                </div>
+
+                <div class="location-account">
+                  <span class="label-account">Département :</span>
+                  <span class="value-account">
+                    {{ announcement.departmentAnnouncement }}
+                  </span><br />
+                  <span class="label-account">Ville :</span>
+                  <span class="value-account">
+                    {{ announcement.cityAnnouncement }}
+                  </span><br />
+                  <span class="label-account">Rémunération :</span>
+                  <span class="value-account">
+                    {{ announcement.remuneration ? 'Oui' : 'Non' }}
+                  </span>
+                </div>
+
+                <button class="btn-discover-account"
+                  onclick="openAnnouncementPopup({{ announcement.id }})">
+                  DÉCOUVRIR
+                </button>
+
+                <p class="expire-account">
+                  L’annonce expire dans {{
+                    announcement.expiryAnnouncement.diff(now).days
+                  }} jours
+                </p>
+              </div>
+            </div>
+
+            <div class="card-announcement-account-actions">
+              <button class="btn-announcement-action edit"
+                onclick="openEditAnnouncementPopup({{ announcement.id }})">
+                Modifier
+              </button>
+
+              <form action="{{
+                path(
+                  'app_account_delete_announcement',
+                  {
+                    id: announcement.id
+                  }
+                )
+                }}"
+                method="post"
+                style="display: inline;"
+                onsubmit="return confirm('Supprimer cette annonce ?');">
+                <input type="hidden"
+                  name="_token"
+                  value="{{
+                  csrf_token(
+                    'delete_announcement_' ~ announcement.id
+                  )
+                  }}" />
+                <button type="submit" class="btn-announcement-action delete">
+                  SUPPRIMER
+                </button>
+              </form>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      {% if (userAnnouncements|length) > 1 %}
+        <div>
+          <i class="bi bi-arrow-left-circle chevron-announcement"
+            id="chevron-left">
+
+          </i>
+          <i class="bi bi-arrow-right-circle chevron-announcement"
+            id="chevron-right">
+
+          </i>
+        </div>
+      {% endif %}
+    </div>
+  {% else %}
+    <div class="announcement-card-carousel-container">
+      <div class="section-card-announcement-account">
+        <div class="announcement-empty-wrapper">
+          <p class="not-announcement-account">
+            Aucune annonce disponible pour le moment.
+          </p>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="total-form-announcement-account-container">
+    <div class="form-announcement-account-container">
+      <h2 class="title-form-announcement-account"
+        id="publier-annonce-mon-compte">
+        PUBLIER UNE ANNONCE
+      </h2>
+
+      <div class="flash-container-announcement-account">
+        {% for message in all_flashes['auth_error_annoncement_account'] ?? [] %}
+          <div class="flash-message-error-announcement-account">
+            {{ message }}
+          </div>
+        {% endfor %}
+        {% for message in all_flashes['date_error_annoncement_account'] ?? [] %}
+          <div class="flash-message-error-announcement-account">
+            {{ message }}
+          </div>
+        {% endfor %}
+        {% for message in all_flashes['success_annoncement_account'] ?? [] %}
+          <div class="flash-message-success-announcement-account">
+            {{ message }}
+          </div>
+        {% endfor %}
+        {% for message in all_flashes['form_error_annoncement_account'] ?? [] %}
+          <div class="flash-message-error-announcement-account">
+            {{ message }}
+          </div>
+        {% endfor %}
+        {% for message in all_flashes['danger_announcement_account'] ?? [] %}
+          <div class="flash-message-error-announcement-account">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+
+      <form action="{{ path('app_account') }}#publier-annonce-mon-compte"
+        method="post"
+        class="form-announcement-account">
+        <p class="form-announcement-account-note">
+          Vos nom, prénom et adresse e-mail ne seront pas publiés sur l'annonce.
+        </p>
+
+        <div class="form-announcement-account-content">
+          <div class="form-flex-container-account">
+            <div class="form-announcement-account-input">
+              <label for="ad-type-account"
+                class="label-form-announcement-account">
+                Vous recruter / Vous êtes disponible :
+              </label>
+              <select name="ad-type-account"
+                id="ad-type-account"
+                class="input-form-announcement-account"
+                required>
+                <option value="">
+                  Veuillez sélectionner un choix
+                </option>
+                <option value="Recrute">
+                  Recrute
+                </option>
+                <option value="Disponible">
+                  Disponible
+                </option>
+              </select>
+            </div>
+            <div class="form-announcement-account-input">
+              <label for="job-search-account"
+                class="label-form-announcement-account">
+                Métier recherché / Proposé :
+              </label>
+              <select name="job-search-account"
+                id="job-search-account"
+                class="input-form-announcement-account"
+                required>
+                <option value="">
+                  Veuillez sélectionner un métier
+                </option>
+                {% for sub in subCategories %}
+                  <option value="{{ sub.nameSubCategory }}">
+                    {{ sub.nameSubCategory }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="form-announcement-account-input">
+            <label for="is-paid-account"
+              class="label-form-announcement-account">
+              Proposez-vous une mission rémunérée / Souhaitez-vous être
+              rémunérée ?
+            </label>
+            <select name="is-paid-account"
+              id="is-paid-account"
+              class="input-form-announcement-account"
+              required>
+              <option value="">
+                Faite votre choix
+              </option>
+              <option value="oui">
+                Oui
+              </option>
+              <option value="non">
+                Non
+              </option>
+            </select>
+          </div>
+
+          <div class="form-flex-container-account">
+            <div class="form-announcement-account-input">
+              <label for="department-display-account">Département:</label>
+              <div class="department-list-container-announcement-account">
+                <input type="text"
+                  id="department-display-account"
+                  class="input-form-announcement-account department-search-input-announcement-account"
+                  placeholder="Rechercher un département..."
+                  autocomplete="off"
+                  required />
+
+                <input type="hidden"
+                  name="department-account"
+                  id="department-account-hidden" />
+                <ul class="department-list-announcement-account">
+                  <li><a href="#" data-department="01">Ain (01)</a></li>
+                  <li><a href="#" data-department="02">Aisne (02)</a></li>
+                  <li><a href="#" data-department="03">Allier (03)</a></li>
+                  <li>
+                    <a href="#" data-department="04">
+                      Alpes-de-Haute-Provence (04)
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" data-department="05">Hautes-Alpes (05)</a>
+                  </li>
+                  <li>
+                    <a href="#" data-department="06">Alpes-Maritimes (06)</a>
+                  </li>
+                  <li><a href="#" data-department="07">Ardèche (07)</a></li>
+                  <li><a href="#" data-department="08">Ardennes (08)</a></li>
+                  <li><a href="#" data-department="09">Ariège (09)</a></li>
+                  <li><a href="#" data-department="10">Aube (10)</a></li>
+                  <li><a href="#" data-department="11">Aude (11)</a></li>
+                  <li><a href="#" data-department="12">Aveyron (12)</a></li>
+                  <li>
+                    <a href="#" data-department="13">Bouches-du-Rhône (13)</a>
+                  </li>
+                  <li><a href="#" data-department="14">Calvados (14)</a></li>
+                  <li><a href="#" data-department="15">Cantal (15)</a></li>
+                  <li><a href="#" data-department="16">Charente (16)</a></li>
+                  <li>
+                    <a href="#" data-department="17">Charente-Maritime (17)</a>
+                  </li>
+                  <li><a href="#" data-department="18">Cher (18)</a></li>
+                  <li><a href="#" data-department="19">Corrèze (19)</a></li>
+                  <li>
+                    <a href="#" data-department="2A">Corse-du-Sud (2A)</a>
+                  </li>
+                  <li><a href="#" data-department="2B">Haute-Corse (2B)</a></li>
+                  <li><a href="#" data-department="21">Côte-d’Or (21)</a></li>
+                  <li>
+                    <a href="#" data-department="22">Côtes-d’Armor (22)</a>
+                  </li>
+                  <li><a href="#" data-department="23">Creuse (23)</a></li>
+                  <li><a href="#" data-department="24">Dordogne (24)</a></li>
+                  <li><a href="#" data-department="25">Doubs (25)</a></li>
+                  <li><a href="#" data-department="26">Drôme (26)</a></li>
+                  <li><a href="#" data-department="27">Eure (27)</a></li>
+                  <li>
+                    <a href="#" data-department="28">Eure-et-Loir (28)</a>
+                  </li>
+                  <li><a href="#" data-department="29">Finistère (29)</a></li>
+                  <li><a href="#" data-department="30">Gard (30)</a></li>
+                  <li>
+                    <a href="#" data-department="31">Haute-Garonne (31)</a>
+                  </li>
+                  <li><a href="#" data-department="32">Gers (32)</a></li>
+                  <li><a href="#" data-department="33">Gironde (33)</a></li>
+                  <li><a href="#" data-department="34">Hérault (34)</a></li>
+                  <li>
+                    <a href="#" data-department="35">Ille-et-Vilaine (35)</a>
+                  </li>
+                  <li><a href="#" data-department="36">Indre (36)</a></li>
+                  <li>
+                    <a href="#" data-department="37">Indre-et-Loire (37)</a>
+                  </li>
+                  <li><a href="#" data-department="38">Isère (38)</a></li>
+                  <li><a href="#" data-department="39">Jura (39)</a></li>
+                  <li><a href="#" data-department="40">Landes (40)</a></li>
+                  <li>
+                    <a href="#" data-department="41">Loir-et-Cher (41)</a>
+                  </li>
+                  <li><a href="#" data-department="42">Loire (42)</a></li>
+                  <li><a href="#" data-department="43">Haute-Loire (43)</a></li>
+                  <li>
+                    <a href="#" data-department="44">Loire-Atlantique (44)</a>
+                  </li>
+                  <li><a href="#" data-department="45">Loiret (45)</a></li>
+                  <li><a href="#" data-department="46">Lot (46)</a></li>
+                  <li>
+                    <a href="#" data-department="47">Lot-et-Garonne (47)</a>
+                  </li>
+                  <li><a href="#" data-department="48">Lozère (48)</a></li>
+                  <li>
+                    <a href="#" data-department="49">Maine-et-Loire (49)</a>
+                  </li>
+                  <li><a href="#" data-department="50">Manche (50)</a></li>
+                  <li><a href="#" data-department="51">Marne (51)</a></li>
+                  <li><a href="#" data-department="52">Haute-Marne (52)</a></li>
+                  <li><a href="#" data-department="53">Mayenne (53)</a></li>
+                  <li>
+                    <a href="#" data-department="54">Meurthe-et-Moselle (54)</a>
+                  </li>
+                  <li><a href="#" data-department="55">Meuse (55)</a></li>
+                  <li><a href="#" data-department="56">Morbihan (56)</a></li>
+                  <li><a href="#" data-department="57">Moselle (57)</a></li>
+                  <li><a href="#" data-department="58">Nièvre (58)</a></li>
+                  <li><a href="#" data-department="59">Nord (59)</a></li>
+                  <li><a href="#" data-department="60">Oise (60)</a></li>
+                  <li><a href="#" data-department="61">Orne (61)</a></li>
+                  <li>
+                    <a href="#" data-department="62">Pas-de-Calais (62)</a>
+                  </li>
+                  <li><a href="#" data-department="63">Puy-de-Dôme (63)</a></li>
+                  <li>
+                    <a href="#" data-department="64">
+                      Pyrénées-Atlantiques (64)
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" data-department="65">Hautes-Pyrénées (65)</a>
+                  </li>
+                  <li>
+                    <a href="#" data-department="66">
+                      Pyrénées-Orientales (66)
+                    </a>
+                  </li>
+                  <li><a href="#" data-department="67">Bas-Rhin (67)</a></li>
+                  <li><a href="#" data-department="68">Haut-Rhin (68)</a></li>
+                  <li><a href="#" data-department="69">Rhône (69)</a></li>
+                  <li><a href="#" data-department="70">Haute-Saône (70)</a></li>
+                  <li>
+                    <a href="#" data-department="71">Saône-et-Loire (71)</a>
+                  </li>
+                  <li><a href="#" data-department="72">Sarthe (72)</a></li>
+                  <li><a href="#" data-department="73">Savoie (73)</a></li>
+                  <li>
+                    <a href="#" data-department="74">Haute-Savoie (74)</a>
+                  </li>
+                  <li><a href="#" data-department="75">Paris (75)</a></li>
+                  <li>
+                    <a href="#" data-department="76">Seine-Maritime (76)</a>
+                  </li>
+                  <li>
+                    <a href="#" data-department="77">Seine-et-Marne (77)</a>
+                  </li>
+                  <li><a href="#" data-department="78">Yvelines (78)</a></li>
+                  <li><a href="#" data-department="79">Deux-Sèvres (79)</a></li>
+                  <li><a href="#" data-department="80">Somme (80)</a></li>
+                  <li><a href="#" data-department="81">Tarn (81)</a></li>
+                  <li>
+                    <a href="#" data-department="82">Tarn-et-Garonne (82)</a>
+                  </li>
+                  <li><a href="#" data-department="83">Var (83)</a></li>
+                  <li><a href="#" data-department="84">Vaucluse (84)</a></li>
+                  <li><a href="#" data-department="85">Vendée (85)</a></li>
+                  <li><a href="#" data-department="86">Vienne (86)</a></li>
+                  <li>
+                    <a href="#" data-department="87">Haute-Vienne (87)</a>
+                  </li>
+                  <li><a href="#" data-department="88">Vosges (88)</a></li>
+                  <li><a href="#" data-department="89">Yonne (89)</a></li>
+                  <li>
+                    <a href="#" data-department="90">
+                      Territoire de Belfort (90)
+                    </a>
+                  </li>
+                  <li><a href="#" data-department="91">Essonne (91)</a></li>
+                  <li>
+                    <a href="#" data-department="92">Hauts-de-Seine (92)</a>
+                  </li>
+                  <li>
+                    <a href="#" data-department="93">Seine-Saint-Denis (93)</a>
+                  </li>
+                  <li>
+                    <a href="#" data-department="94">Val-de-Marne (94)</a>
+                  </li>
+                  <li><a href="#" data-department="95">Val-d’Oise (95)</a></li>
+                  <li>
+                    <a href="#" data-department="971">Guadeloupe (971)</a>
+                  </li>
+                  <li>
+                    <a href="#" data-department="972">Martinique (972)</a>
+                  </li>
+                  <li><a href="#" data-department="973">Guyane (973)</a></li>
+                  <li>
+                    <a href="#" data-department="974">La Réunion (974)</a>
+                  </li>
+                  <li><a href="#" data-department="976">Mayotte (976)</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="form-announcement-account-input">
+              <label for="city-account" class="label-form-announcement-account">
+                Ville :
+              </label>
+              <input type="text"
+                name="city-account"
+                id="city-account"
+                class="input-form-announcement-account"
+                placeholder="Écrivez votre ville ici"
+                required />
+            </div>
+          </div>
+
+          <div class="form-announcement-account-input">
+            <label for="short-description-account"
+              class="label-form-announcement-account">
+              Description de votre annonce:
+            </label>
+            <textarea name="short-description-account"
+              id="short-description-account"
+              class="input-form-announcement-account"
+              rows="4"
+              placeholder="Ex : Nous recherchons un(e) maquilleur(se) expérimenté(e) pour un tournage de court-métrage à Paris, du 10 au 12 juin. Maîtrise des effets spéciaux appréciée. Rémunération selon profil, etc ..."
+              required></textarea>
+          </div>
+
+          <div class="form-flex-container-account responsiv-colum-date">
+            <div class="form-announcement-account-input">
+              <label for="availability-account"
+                class="label-form-announcement-account">
+                Date de début du tournage / de disponibilité:
+              </label>
+              <input type="date"
+                name="availability-account"
+                id="availability-account"
+                class="input-form-announcement-account"
+                required />
+            </div>
+            <div class="form-announcement-account-input">
+              <label for="ad-expiration-account"
+                class="label-form-announcement-account">
+                Date de fin du tournage / de disponibilité:
+              </label>
+              <input type="date"
+                name="ad-expiration-account"
+                id="ad-expiration-account"
+                class="input-form-announcement-account"
+                required />
+            </div>
+          </div>
+          
+<div class="form-announcement-account-input">
+  <label for="useful-link-account" class="label-form-announcement-account">
+    Email pour être recontacté :
+  </label>
+  <input type="email"
+         name="useful-link-account"
+         id="useful-link-account"
+         class="input-form-announcement-account"
+         placeholder="ex : monadresse@email.com"
+         required />
+</div>
+
+        </div>
+
+        <div class="form-announcement-input"
+          style="display: flex; align-items: center; gap: 10px;">
+          <input type="checkbox"
+            id="terms-announcement-account"
+            name="terms-announcement-account"
+            required
+            style="width: 18px; height: 18px; cursor: pointer;" />
+          <label for="terms-announcement-account"
+            class="label-form-announcement"
+            style="margin: 0;">
+            J'accepte les <a href="{{ path('app_rgpd') }}"
+              target="_blank"
+              style="color: #2C3E50; text-decoration: underline;">
+              conditions générales d’utilisation
+            </a> *
+          </label>
+        </div>
+
+        <div class="form-announcement-account-btn">
+          <input type="hidden"
+            name="_token"
+            value="{{ csrfTokenNewAnnouncement }}" />
+          <button type="submit"
+            name="submit-announcement-account"
+            class="btn-form-announcement-account">
+            PUBLIER VOTRE ANNONCE
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

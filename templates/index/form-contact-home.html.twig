@@ -1,0 +1,123 @@
+<section id="nous-contacter" class="form-contact-home-section">
+  <div class="form-contact-home-container">
+    <div class="form-contact-home-info">
+      <h2>
+        CONTACTEZ-NOUS
+      </h2>
+      <p class="text-1-form-contact-home">
+        Vous avez un projet dont vous souhaitez discuter avec nous ?
+      </p>
+      {% if generalCineNetwork is not null %}
+        
+        {% if generalCineNetwork.adresseCompany is not empty %}
+          <p class="adress-form-contact-home">
+            <strong>ADRESSE:</strong>
+            <a class="link-adress-company"
+              href="https://www.google.com/maps/search/?q={{ generalCineNetwork.adresseCompany }}"
+              target="_blank"
+              rel="noopener noreferrer">
+              {{ generalCineNetwork.adresseCompany }}
+            </a>
+          </p>
+        {% endif %}
+
+        {% if generalCineNetwork.telCompany is not empty %}
+          <p class="number-form-contact-home">
+            <strong>NUMÉRO:</strong>
+            <a class="link-number-company" href="tel:{{ generalCineNetwork.telCompany }}">
+              {{ generalCineNetwork.telCompany }}
+            </a>
+          </p>
+        {% endif %}
+
+      {% endif %}
+    </div>
+    <div class="form-contact-home">
+        <div class="flash-container-contact-home">
+      {% for message in all_flashes['success_contact_home'] ?? [] %}
+        <div class="flash-success-contact-home">{{ message }}</div>
+      {% endfor %}
+    </div>
+      <form method="post">
+        <div class="form-group-name-contact-home-flex">
+          <div class="form-group-contact-home">
+            <label class="label-contact-home" for="firstname">
+              Nom de famille:
+            </label>
+            <input type="text"
+              id="firstname-form-contact"
+              name="firstname-form-contact"
+              required />
+          </div>
+
+          <div class="form-group-contact-home">
+            <label class="label-contact-home" for="lastname">Prénom:</label>
+            <input type="text"
+              id="lastname-form-contact"
+              name="lastname-form-contact"
+              required />
+          </div>
+        </div>
+
+        <div class="form-group-name-contact-home-flex">
+          <div class="form-group-contact-home">
+            <label class="label-contact-home" for="email">Email:</label>
+            <input type="text"
+              id="email-form-contact-form-contact"
+              name="email-form-contact-form-contact"
+              required />
+          </div>
+
+          <div class="form-group-contact-home">
+            <label class="label-contact-home" for="question">
+              Vous nous contacter pour ?
+            </label>
+            <select id="event-form-contact" name="event-form-contact" required>
+              <option value="question">
+                Une question sur un évènement
+              </option>
+              <option value="formation">
+                Une question sur une formation
+              </option>
+              <option value="formation">
+                Une question concernant les annonces
+              </option>
+              <option value="formation">
+                Une question concernant partenariat/collaboration
+              </option>
+              <option value="autre">
+                Autre
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group-contact-home">
+          <label class="label-contact-home" for="message">Message:</label>
+          <textarea id="comment-form-contact"
+            name="comment-form-contact"
+            required></textarea>
+        </div>
+
+        <div class="form-group-contact-home">
+          <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+            <input
+              type="checkbox"
+              id="terms-contact-home"
+              name="terms-contact-home"
+              required
+              style="width: 18px; height: 18px; cursor: pointer;"
+            />
+            <label for="terms-contact-home" class="label-contact-home" style="margin: 0;">
+              J'accepte les <a href="{{ path('app_rgpd') }}" target="_blank" style="color: #2C3E50; text-decoration: underline;">conditions générales d’utilisation</a> *
+            </label>
+          </div>
+        </div>
+
+        <button class="btn-form-contact-home" type="submit" name="submit-contact-home">
+          ENVOYER
+        </button>
+      </form>
+    </div>
+  </div>
+</section>

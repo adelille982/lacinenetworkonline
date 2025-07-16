@@ -1,0 +1,13 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+
+auth:
+    path: /auth
+    methods: ['POST']
+
+artgris_file_manager:
+    resource: '@ArtgrisFileManagerBundle/Resources/config/routing.yml'
+    prefix: /filemanager

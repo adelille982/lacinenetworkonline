@@ -1,0 +1,34 @@
+<section class="section-menu-home-blog">
+
+<div class="menu-close-btn-mobile-blog" onclick="closeMobileBlogMenu()">
+  <i class="bi bi-x-lg"></i>
+</div>
+
+    <div class="menu-home-blog-container">
+        <h2>CATÉGORIES</h2>
+        <ul class="ul-menu-home-blog">
+            <li><a href="{{ path('app_home_blog') }}" class="category-filter" data-category="all">Tous les articles</a></li>
+            <hr>
+            {% for category in categoriesBlog %}
+                <li><a href="{{ path('app_blog_category', { slug: category.slugBlogCategory }) }}" class="category-filter {% if activeCategorySlug is defined and category.slugBlogCategory == activeCategorySlug %}active-category{% endif %}" data-category="{{ category.slugBlogCategory }}">{{ category.nameBlogCategory }}</a></li>
+                <hr>
+            {% else %}
+                <li>Aucune catégorie disponible</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+{% if firstEvent %}
+  <h2 class="title-filter-search-announcement">PROCHAIN ÉVÈNEMENT</h2>
+  <a href="{{ path('app_index') }}#inscription-evenement">
+    <div class="event-announcement">
+      <div class="overlay-event-announcement"></div>
+      <img src="{{ asset('images/evenements/images-evenements/' ~ firstEvent.imgEvent) }}" alt="{{ firstEvent.titleEvent }} | imagine_filter('thumbnail_medium')" />
+      <div class="overlay-event-announcement-content">
+        <p class="bouton-event-menu">DÉCOUVRIR</p>
+      </div>
+    </div>
+  </a>
+{% endif %}
+
+</section>
