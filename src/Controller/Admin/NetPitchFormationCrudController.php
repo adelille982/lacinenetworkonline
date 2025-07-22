@@ -89,6 +89,25 @@ class NetPitchFormationCrudController extends AbstractCrudController
                 ->hideOnIndex()
                 ->hideOnForm()
                 ->hideOnDetail(),
+            TextField::new('slugNetPitchFormation', 'Slug (URL personnalisée)')
+                ->hideOnIndex()
+                ->setHelp('
+                <span style="color: red;">
+                    Le slug permet de personnaliser l’URL publique de la formation (ex. : <code>/lacinenetworknom-de-la-formation</code>).
+                </span>
+                <br><hr>
+                <details>
+                    <summary style="color: #FFA500; cursor: pointer;">Conseils pour bien choisir un slug</summary>
+                    <div style="margin-top: 10px;">
+                        <ul>
+                            <li>Utilisez uniquement des lettres minuscules, des chiffres et des tirets (-).</li>
+                            <li>Pas d’accents, d’espaces ni de caractères spéciaux.</li>
+                            <li>Le slug doit être court, clair et représentatif du titre de la formation.</li>
+                        </ul>
+                        <p><em>Exemples : <code>ecriture-court-metrage</code>, <code>production-independante</code></em></p>
+                    </div>
+                </details>
+            '),
             TextField::new('titleNetPitchFormation', 'Titre')
                 ->setHelp('Titre complet de la formation (visible sur le site public).'),
             IntegerField::new('maxNumberNetPitchFormation', 'Nombre max. de participants')
